@@ -11,12 +11,12 @@ Admin ja mod saavad kasutajaid IP või kasutajanime järgi bännida juhul kui ka
 
 Tähtsamad failid ja nende kirjeldused:
 
-**board.php** - sisaldab endas koodi mis laeb postitused ja teadetetahvli kirjelduse.
-**admin.php** - administreermiseks vajalikud funktsioonid, sellele failile suunatakse kõik admin päringud.
-**posts.php** - kuvab üldiseid uudiseid mis on seotud lehega. Kasutajatel on võimalus kommenteerida.
-**style.css** - üldised CSS stiilid mida jagab enamus lehti
-**board.css** - CSS fail mis määrab stiili tahvlitele
+***board.php** - sisaldab endas koodi mis laeb postitused ja teadetetahvli kirjelduse.
+***admin.php** - administreermiseks vajalikud funktsioonid, sellele failile suunatakse kõik admin päringud.
+***posts.php** - kuvab üldiseid uudiseid mis on seotud lehega. Kasutajatel on võimalus kommenteerida.
+***style.css** - üldised CSS stiilid mida jagab enamus lehti
+***board.css** - CSS fail mis määrab stiili tahvlitele
 
 
 Põhimõtted:
-Kõik külastajad on kasutajad, juhul kui kasutaja ei ole sisse loginud on ta anonüümne kasutaja kes peaks omama küpsist mõndade andmetega mis lihtsustavad lehitsemist.
+*Kõik külastajad on kasutajad, juhul kui kasutaja ei ole sisse loginud on ta anonüümne kasutaja kes peaks omama küpsist mõndade andmetega mis lihtsustavad lehitsemist.
