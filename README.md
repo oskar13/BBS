@@ -1,9 +1,10 @@
 BBS
 ===
-* IF 13 veebiprogrameerimis kursuse lõputöö
+IF 13 veebiprogrameerimis kursuse lõputöö
 
 
 Valmis lehestiku kirjeldus
+--------------------------
 
 Lehestik koosneb teadetetahvlitest mida admi saab luua ja kustutada, lisada kirjeldusi ning määrata neile moderaatoreid.
 Admin ja mod saavad kasutajaid IP või kasutajanime järgi bännida juhul kui kasutaja on rikkunud reegleid.
@@ -19,4 +20,4 @@ Tähtsamad failid ja nende kirjeldused:
 
 
 Põhimõtted:
-*Kõik külastajad on kasutajad, juhul kui kasutaja ei ole sisse loginud on ta anonüümne kasutaja kes peaks omama küpsist mõndade andmetega mis lihtsustavad lehitsemist.
+* Kõik külastajad on kasutajad, juhul kui kasutaja ei ole sisse loginud on ta anonüümne kasutaja kes peaks omama küpsist mõndade andmetega mis lihtsustavad lehitsemist.
