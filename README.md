@@ -24,3 +24,7 @@ Admin ja mod saavad kasutajaid IP või kasutajanime järgi bännida juhul kui ka
 - [x] README
 - [x] algne andmebaasi skeem
 - [ ] SQL laused
+
+#### Teadaolevad vead
+- Sesiooni kaaperdamine teiselt saidilt mis asub samas serveris
+- Kautaja sisestatud andmete puhastamine mis välistaks SQL ründed
