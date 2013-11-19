@@ -10,8 +10,9 @@ Admin ja mod saavad kasutajaid IP või kasutajanime järgi bännida juhul kui ka
 
 #### Tähtsamad failid ja nende kirjeldused:
 * **board.php** - sisaldab endas koodi mis laeb postitused ja teadetetahvli kirjelduse.
-* **admin.php** - administreermiseks vajalikud funktsioonid, sellele failile suunatakse kõik admin päringud.
-* **posts.php** - kuvab üldiseid uudiseid mis on seotud lehega. Kasutajatel on võimalus kommenteerida.
+* **admin.php** - administreermiseks vajalikud funktsioonid, sellele failile suunatakse kõik admin päringud mis on seotud teadetetahvlitega.
+* **news.php** - kuvab üldiseid uudiseid mis on seotud lehega. Kasutajatel on võimalus kommenteerida uudiseid.
+* **news-admin.php** - uudiste sisestamine ja uuendamine.
 * **normalize.css** - nullib ära võimalikud lehitsejate vahelised erinevused
 * **style.css** - üldised CSS stiilid mida jagab enamus lehti
 * **board.css** - CSS fail mis määrab stiili tahvlitele
@@ -29,3 +30,7 @@ Admin ja mod saavad kasutajaid IP või kasutajanime järgi bännida juhul kui ka
 #### Teadaolevad vead
 - Sesiooni kaaperdamine teiselt saidilt mis asub samas serveris
 - Kautaja sisestatud andmete puhastamine puudub
+
+
+#### Ettepanekud
+- HTML ja CSS loomisel võiks kasutada Twitter Bootstrapi
