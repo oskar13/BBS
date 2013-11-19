@@ -4,7 +4,7 @@ BBS
 
 
 ####Valmis lehestiku kirjeldus
-Lehestik koosneb teadetetahvlitest mida admi saab luua ja kustutada, lisada kirjeldusi ning määrata neile moderaatoreid.
+Lehestik koosneb teadetetahvlitest mida admin saab luua ja kustutada, lisada kirjeldusi ning määrata neile moderaatoreid.
 Admin ja mod saavad kasutajaid IP või kasutajanime järgi bännida juhul kui kasutaja on rikkunud reegleid.
 
 
@@ -19,12 +19,14 @@ Admin ja mod saavad kasutajaid IP või kasutajanime järgi bännida juhul kui ka
 
 #### Põhimõtted:
 * Kõik külastajad on kasutajad, juhul kui kasutaja ei ole sisse loginud on ta anonüümne kasutaja kes peaks omama küpsist mõndade andmetega mis lihtsustavad lehitsemist.
+* Kasutajad peavad saama oma postitusi kustutada. Parool seatakse enne postituse saatmist või kasutatakse küpsises hoiustatud parooli.
 
 #### TODO:
 - [x] README
 - [x] algne andmebaasi skeem
-- [ ] SQL laused
+- [ ] leida viis kuidas mugavalt kuvada postitusi mis on omavahel seotud.
+- 
 
 #### Teadaolevad vead
 - Sesiooni kaaperdamine teiselt saidilt mis asub samas serveris
-- Kautaja sisestatud andmete puhastamine mis välistaks SQL ründed
+- Kautaja sisestatud andmete puhastamine puudub
