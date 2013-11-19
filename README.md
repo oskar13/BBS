@@ -8,6 +8,7 @@ Admin ja mod saavad kasutajaid IP või kasutajanime järgi bännida juhul kui ka
 
 
 #### Tähtsamad failid ja nende kirjeldused:
+* **index.php** - avaleht kus on nimekiri lehtedest
 * **board.php** - sisaldab endas koodi mis laeb postitused ja teadetetahvli kirjelduse.
 * **admin.php** - administreermiseks vajalikud funktsioonid, sellele failile suunatakse kõik admin päringud mis on seotud teadetetahvlitega.
 * **news.php** - kuvab üldiseid uudiseid mis on seotud lehega. Kasutajatel on võimalus kommenteerida uudiseid.
@@ -22,9 +23,9 @@ Admin ja mod saavad kasutajaid IP või kasutajanime järgi bännida juhul kui ka
 * Kasutajad peavad saama oma postitusi kustutada. Parool seatakse enne postituse saatmist või kasutatakse küpsises hoiustatud parooli.
 
 #### TODO:
-[x] README
-[x] algne andmebaasi skeem
-[ ] leida viis kuidas mugavalt kuvada postitusi mis on omavahel seotud.
+- [x] README
+- [x] algne andmebaasi skeem
+- [ ] leida viis kuidas mugavalt kuvada postitusi mis on omavahel seotud.
 
 #### Teadaolevad vead
 - Sesiooni kaaperdamine teiselt saidilt mis asub samas serveris
@@ -33,3 +34,4 @@ Admin ja mod saavad kasutajaid IP või kasutajanime järgi bännida juhul kui ka
 
 #### Ettepanekud
 - HTML ja CSS loomisel võiks kasutada Twitter Bootstrapi
+- tahvlid võiksid olla kategoriseeritud
