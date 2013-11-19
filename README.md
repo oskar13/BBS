@@ -25,7 +25,6 @@ Admin ja mod saavad kasutajaid IP või kasutajanime järgi bännida juhul kui ka
 - [x] README
 - [x] algne andmebaasi skeem
 - [ ] leida viis kuidas mugavalt kuvada postitusi mis on omavahel seotud.
-- 
 
 #### Teadaolevad vead
 - Sesiooni kaaperdamine teiselt saidilt mis asub samas serveris
