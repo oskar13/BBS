@@ -37,4 +37,4 @@ Admin ja mod saavad kasutajaid IP või kasutajanime järgi bännida juhul kui ka
 - HTML ja CSS loomisel võiks kasutada Twitter Bootstrapi
 - tahvlid võiksid olla kategoriseeritud, võimak koostada selle järgi navigatsioon esilehele
 - kasutusel erilised koodid millega viidatakse postitusele mida vastatakse, näide ">>123456". Käitub lingina mis viib sind post.php lehele kus vastav kommentaar/postitus on teise värviga määratud.
-- ulrid tuleb saada ilusamaks, sammuti serverile saata andmed elegantsemalt ja hoida aadressi ribad puhtamad.
+- url-id tuleb saada ilusamaks, sammuti serverile saata andmed elegantsemalt ja hoida aadressi ribad puhtamad.
