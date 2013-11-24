@@ -10,6 +10,7 @@ Admin ja mod saavad kasutajaid IP või kasutajanime järgi bännida juhul kui ka
 #### Tähtsamad failid ja nende kirjeldused:
 * **index.php** - avaleht kus on nimekiri lehtedest
 * **board.php** - sisaldab endas koodi mis laeb postitused ja teadetetahvli kirjelduse.
+* **post.php** - kuvab üksikut postitust koos kommentaaridega.
 * **admin.php** - administreermiseks vajalikud funktsioonid, sellele failile suunatakse kõik admin päringud mis on seotud teadetetahvlitega.
 * **news.php** - kuvab üldiseid uudiseid mis on seotud lehega. Kasutajatel on võimalus kommenteerida uudiseid.
 * **news-admin.php** - uudiste sisestamine ja uuendamine.
@@ -34,4 +35,6 @@ Admin ja mod saavad kasutajaid IP või kasutajanime järgi bännida juhul kui ka
 
 #### Ettepanekud
 - HTML ja CSS loomisel võiks kasutada Twitter Bootstrapi
-- tahvlid võiksid olla kategoriseeritud
+- tahvlid võiksid olla kategoriseeritud, võimak koostada selle järgi navigatsioon esilehele
+- kasutusel erilised koodid millega viidatakse postitusele mida vastatakse, näide ">>123456". Käitub lingina mis viib sind post.php lehele kus vastav kommentaar/postitus on teise värviga määratud.
+- ulrid tuleb saada ilusamaks, sammuti serverile saata andmed elegantsemalt ja hoida aadressi ribad puhtamad.
