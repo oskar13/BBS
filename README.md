@@ -11,6 +11,7 @@ Admin ja mod saavad kasutajaid IP või kasutajanime järgi bännida juhul kui ka
 * **index.php** - avaleht kus on nimekiri lehtedest
 * **board.php** - sisaldab endas koodi mis laeb postitused ja teadetetahvli kirjelduse.
 * **post.php** - kuvab üksikut postitust koos kommentaaridega.
+* **upload.php** - piltide üles laadimine ja pisipildi genereerimine.
 * **admin.php** - administreermiseks vajalikud funktsioonid, sellele failile suunatakse kõik admin päringud mis on seotud teadetetahvlitega.
 * **news.php** - kuvab üldiseid uudiseid mis on seotud lehega. Kasutajatel on võimalus kommenteerida uudiseid.
 * **news-admin.php** - uudiste sisestamine ja uuendamine.
