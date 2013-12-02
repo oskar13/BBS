@@ -1,6 +1,18 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300);
+
 html {
-	background-image: radial-gradient(ellipse farthest-corner at center top, #CFFFDF 0%, #0086C4 100%);
+	/*background-image: radial-gradient(ellipse farthest-corner at center top, #CFFFDF 0%, #0086C4 100%);*/
+	background-image: url('simple_dashed.png');
 	height: 100%;
+}
+
+* {
+	font-family: 'Open Sans', sans-serif;
+	color: #d0d0d0;
+}
+
+a {
+	text-decoration: none;
 }
 
 #page-container {
@@ -8,7 +20,12 @@ html {
 }
 
 #page-header {
-	border-bottom: 1px solid #FF99CC;
+	border-bottom: 2px solid #1C717B;
+}
+
+#banner {
+	display: inline-block;
+	margin: 0 auto;
 }
 
 .global-message {
@@ -18,15 +35,44 @@ html {
 #board-title {
 	font-size: 1em;
 	text-align: center;
+	font-weight: 300;
+}
+
+#board-title h1{
+	font-size: 2em;
+	font-weight: 300;
+	text-shadow: 0 0 8px #85C4FF;
+	transition: all 1s ease;
+}
+
+#board-title h1:hover{
+    text-shadow: 0 0 10px #FF1160;
 }
 
 .thread {
-	border-bottom: 1px solid #FF99CC;
+	border-bottom: 2px solid #1C717B;
 	padding: 1em 0;
 }
 
+.file-info {
+	margin-left: 20px;
+	font-size: 0.9em;
+}
+
+.post-image {
+	margin: 3px 20px 5px;
+	float: left;
+}
+
+.post-image img{
+	float: left;
+	height: auto;
+	max-width: 100%;
+}
+
 .username{
-	color: #29A329;
+    color: #29A329;
+    text-shadow: 0 0 5px rgba(2, 139, 0, 0.64);
 }
 
 .reply-container {
@@ -48,11 +94,12 @@ html {
 }
 
 .post-reply {
-    background-color: rgba(85, 74, 128, 0.36);
+ 	background: linear-gradient(to bottom, rgba(4, 27, 27, 0.72) 0%, rgba(4, 69, 68, 0.47) 100%) no-repeat scroll right top rgba(0, 0, 0, 0);
+    border: 1px solid rgba(9, 123, 133, 0.34);
+    border-radius: 4px;
     display: table;
-    float: left;
-    max-width: 95%;
-    min-width: 300px;
+    /*max-width: 95%;
+    min-width: 300px;*/
     padding: 0.1em 0.5em;
 }
 
