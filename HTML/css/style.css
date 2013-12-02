@@ -1,0 +1,15 @@
+html {
+	background-color: #FFFFCC;
+}
+
+#page-container {
+	margin: 0.5em;
+}
+
+#board-title {
+	font-size: 1em;
+}
+
+.post-reply {
+	background-color: #965CAB;
+}
