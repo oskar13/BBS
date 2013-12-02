@@ -1,15 +1,59 @@
 html {
-	background-color: #FFFFCC;
+	background-image: radial-gradient(ellipse farthest-corner at center top, #CFFFDF 0%, #0086C4 100%);
+	height: 100%;
 }
 
 #page-container {
 	margin: 0.5em;
 }
 
+#page-header {
+	border-bottom: 1px solid #FF99CC;
+}
+
+.global-message {
+	text-align: center;
+}
+
 #board-title {
 	font-size: 1em;
+	text-align: center;
+}
+
+.thread {
+	border-bottom: 1px solid #FF99CC;
+	padding: 1em 0;
+}
+
+.username{
+	color: #29A329;
+}
+
+.reply-container {
+	margin-bottom: 0.5em;
+}
+
+.reply-arrows {
+    float: left;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.post-parent .post-content {
+	margin: 0.5em 1em;
+}
+
+.post-reply .post-content {
+	margin: 0.5em 1em;
 }
 
 .post-reply {
-	background-color: #965CAB;
+    background-color: rgba(85, 74, 128, 0.36);
+    display: table;
+    float: left;
+    max-width: 95%;
+    min-width: 300px;
+    padding: 0.1em 0.5em;
 }
+
+
