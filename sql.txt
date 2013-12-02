@@ -1,0 +1,73 @@
+CREATE TABLE autod (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  regnr VARCHAR(30),
+  mark   VARCHAR(30),
+  aasta INT
+);
+
+CREATE TABLE posts (
+	post_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	user_ID INT,
+	poster_ip VARCAR(30),
+	post_date INT,
+	post_pic VARCAR(100),
+	post_pic_thumb VARCAR(100),
+	post_content TEXT,
+	parent_ID INT,
+	board_ID,
+	del_password VARCAR(20)
+);
+
+CREATE TABLE boards (
+	board_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	board_meta TEXT,
+	board_url VARCHAR(5)
+);
+
+CREATE TABLE reply (
+	r_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	post_ID INT,
+	r_parent_ID INT
+);
+
+CREATE TABLE articles (
+	article_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	user_ID INT,
+	heading VARCHAR(200),
+	date INT,
+	content TEXT
+);
+
+CREATE TABLE comments (
+	comment_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	article_ID INT,
+	user_ID INT,
+	date INT,
+	comment TEXT
+);
+
+CREATE TABLE users (
+	user_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	user_name VARCHAR(50),
+	user_pass VARCHAR(250),
+	banned INT,
+	ban_reason TEXT
+);
+
+CREATE TABLE premissions (
+	premisssion_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	user_ID,
+	level_ID INT,
+	board_ID INT
+);
+
+CREATE TABLE level (
+	level_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	desc VARCHAR(200)
+);
+
+CREATE TABLE warnings (
+	warning_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	user_ID INT,
+	comment VARCHAR(200)
+);
