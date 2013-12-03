@@ -25,22 +25,10 @@ a {
 	font-weight: 300;
 	text-shadow: 0 0 8px #85C4FF;
 	transition: all 1s ease;
-	text-align: center;
 }
 
 #page-header h1:hover{
     text-shadow: 0 0 10px #FF1160;
-}
-
-.half {
-	margin-right: 3%;
-    width: 48%;
-    float: left;
-}
-
-.half-last {
-	width: 48%;
-	float: left;
 }
 
 .blue-box {
@@ -56,12 +44,19 @@ a {
     border-radius: 5px 5px 0 0;
     font-weight: 300;
     margin: 0;
-    padding: 5px;
-    text-align: center;
+    padding: 5px 15px;
+}
+
+.article-meta {
+	font-size: 0.7em;
+}
+
+.article-author {
+	color: green;
 }
 
 .blue-box-inner {
-	padding: 0.5em;
+	padding: 1em;
 }
 
 #page-footer {
