@@ -12,7 +12,14 @@ html {
 }
 
 a {
-	text-decoration: none;
+    color: #62A1A4;
+    text-decoration: none;
+    text-shadow: 0 0 4px rgba(81, 152, 203, 0.23);
+    transition: all 0.4s ease;
+}
+
+a:hover {
+	text-shadow: 0 0 4px rgba(81, 152, 203, 0.73);
 }
 
 #page-container {
@@ -59,6 +66,54 @@ a {
 	padding: 1em;
 }
 
+.blue-box-inner p{
+	margin: 0 0 1em 0;
+}
+
+.blue-box-inner .comments{
+	text-align: right;
+}
+
 #page-footer {
 	text-align: center;
+}
+
+
+/***********************************************/
+
+h3 {
+	font-weight: 300;
+	font-size: 1.25em;
+	margin-left: 1em;
+}
+
+
+.username{
+    color: #29A329;
+    text-shadow: 0 0 5px rgba(2, 139, 0, 0.64);
+}
+
+.reply-container {
+    margin: 0 auto 1em;
+    width: 95%;
+}
+
+.reply-arrows {
+    float: left;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.post-reply .post-content {
+	margin: 0.5em 1em;
+}
+
+.post-reply {
+ 	background: linear-gradient(to bottom, rgba(4, 27, 27, 0.72) 0%, rgba(4, 69, 68, 0.47) 100%) no-repeat scroll right top rgba(0, 0, 0, 0);
+    border: 1px solid rgba(9, 123, 133, 0.34);
+    border-radius: 4px;
+    display: table;
+    /*max-width: 95%;
+    min-width: 300px;*/
+    padding: 0.1em 0.5em;
 }
