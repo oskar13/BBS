@@ -12,7 +12,14 @@ html {
 }
 
 a {
-	text-decoration: none;
+    color: #62A1A4;
+    text-decoration: none;
+    text-shadow: 0 0 4px rgba(81, 152, 203, 0.23);
+    transition: all 0.4s ease;
+}
+
+a:hover {
+	text-shadow: 0 0 4px rgba(81, 152, 203, 0.73);
 }
 
 #page-container {
