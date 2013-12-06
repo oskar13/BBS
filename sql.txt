@@ -8,7 +8,7 @@ CREATE TABLE posts (
 	post_content TEXT,
 	post_stiky_level INT,
 	parent_ID INT,
-	board_ID,
+	board_ID INT,
 	del_password VARCHAR(20),
 	file_size INT,
 	file_name VARCAR,
