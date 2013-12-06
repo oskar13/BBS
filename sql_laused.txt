@@ -12,3 +12,6 @@ post_ID, user_ID, post_date, post_pic, post_pic_thumb, post_content, post_stiky_
 
 
 SELECT post_ID, user_ID, post_date, post_pic, post_pic_thumb, post_content, post_stiky_level, parent_ID, file_size, file_name, file_x, file_y FROM posts WHERE board=1 AND post_sticky_level<0 ORDER BY ID DESC;
+
+
+SELECT post_ID, user_ID, post_date, post_pic, post_pic_thumb, post_content, post_stiky_level, parent_ID, file_size, file_name, file_x, file_y FROM posts WHERE board_ID=1 and post_stiky_level=0 ORDER BY post_ID DESC;
