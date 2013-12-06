@@ -6,7 +6,7 @@ CREATE TABLE posts (
 	post_pic VARCHAR(100),
 	post_pic_thumb VARCHAR(100),
 	post_content TEXT,
-	post_stiky_level INT,
+	post_sticky_level INT,
 	parent_ID INT,
 	board_ID INT,
 	del_password VARCHAR(20),
