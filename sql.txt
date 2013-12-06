@@ -49,13 +49,14 @@ CREATE TABLE users (
 	user_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	user_name VARCHAR(50),
 	user_pass VARCHAR(250),
+	premission_ID INT,
 	banned INT,
 	ban_reason TEXT
 );
 
 CREATE TABLE premissions (
 	premisssion_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	user_ID,
+	user_ID INT,
 	level_ID INT,
 	board_ID INT
 );
