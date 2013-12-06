@@ -1,20 +1,26 @@
 CREATE TABLE posts (
 	post_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	user_ID INT,
-	poster_ip VARCAR(30),
+	poster_ip VARCHAR(30),
 	post_date INT,
-	post_pic VARCAR(100),
-	post_pic_thumb VARCAR(100),
+	post_pic VARCHAR(100),
+	post_pic_thumb VARCHAR(100),
 	post_content TEXT,
+	post_stiky_level INT,
 	parent_ID INT,
 	board_ID,
-	del_password VARCAR(20)
+	del_password VARCHAR(20),
+	file_size INT,
+	file_name VARCAR,
+	file_x INT,
+	file_y INT
 );
 
 CREATE TABLE boards (
 	board_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	board_meta TEXT,
-	board_url VARCHAR(5)
+	board_url VARCHAR(15)
+	board_name VARCHAR(40)
 );
 
 CREATE TABLE reply (
