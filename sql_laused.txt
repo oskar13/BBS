@@ -26,15 +26,14 @@ SELECT post_ID, user_ID, poster_ip , post_date, post_pic, post_pic_thumb, post_c
 
 
 ##Tavakasutaja 
-SELECT posts.post_ID, users.user_name, posts.post_date, posts.post_pic, posts.post_pic_thumb, posts.post_content, posts.post_stiky_level, posts.parent_ID, posts.file_size, posts.file_name, posts.file_x, posts.file_y 
+SELECT posts.post_ID, users.user_name, posts.post_date, posts.post_pic, posts.post_pic_thumb, posts.post_content, posts.post_sticky_level, posts.parent_ID, posts.file_size, posts.file_name, posts.file_x, posts.file_y 
 FROM posts
-INNER JOIN users
-ON posts.user_ID=users.user_ID
+LEFT JOIN users ON posts.user_ID=users.user_ID
 WHERE board_ID=1 
 ORDER BY post_sticky_level DESC,post_ID DESC;
 
 ******************************************
-SELECT Orders.OrderID, Customers.CustomerName, Orders.OrderDate
-FROM Orders
-INNER JOIN Customers
-ON Orders.CustomerID=Customers.CustomerID; 
+#Kuva kas on vastuseid postitusele
+SELECT post_ID
+FROM `reply`
+WHERE r_parent_ID =1;
