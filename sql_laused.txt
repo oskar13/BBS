@@ -1,0 +1,14 @@
+SELECT 
+
+
+SELECT id, post_pic , poster_name , poster_ip , post_content , post_date , parent_id FROM posts ORDER BY ID DESC
+
+
+post_ID, user_ID, poster_ip, post_date, post_pic, post_pic_thumb, post_content, post_stiky_level, parent_ID, board_ID, del_password, file_size, file_name, file_x, file_y
+
+
+
+post_ID, user_ID, post_date, post_pic, post_pic_thumb, post_content, post_stiky_level, parent_ID, file_size, file_name, file_x, file_y
+
+
+SELECT post_ID, user_ID, post_date, post_pic, post_pic_thumb, post_content, post_stiky_level, parent_ID, file_size, file_name, file_x, file_y FROM posts WHERE board=1 AND post_sticky_level<0 ORDER BY ID DESC;
