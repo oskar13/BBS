@@ -37,3 +37,21 @@ ORDER BY post_sticky_level DESC,post_ID DESC;
 SELECT post_ID
 FROM `reply`
 WHERE r_parent_ID =1;
+
+
+
+//////////////////////////////////////////////
+#Postitused
+SELECT thread.thread_ID, users.user_name, thread.post_date, thread.post_content, thread.sticky_level, thread.pic_ID
+FROM thread
+LEFT JOIN users ON thread.user_ID=users.user_ID
+WHERE board_ID=:board_ID
+ORDER BY thread.sticky_level DESC, thread.thread_ID DESC;
+
+#Vastused
+SELECT reply.reply_ID, users.user_name, reply.post_date, reply.post_content, reply.pic_ID
+FROM reply
+LEFT JOIN users ON reply.user_ID = users.user_ID
+WHERE thread_ID =:thread_ID
+ORDER BY reply.reply_ID DESC
+LIMIT 0 , 30;

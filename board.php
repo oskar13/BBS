@@ -17,7 +17,7 @@ $board_ID = 1;
         <link rel="stylesheet" href="css/board.css">
     </head>
     <body>
-    <div id="page-container">
+        <div id="page-container">
 
         <header id="page-header">
             <div class="board-list">[ <a href="#">b</a> / <a href="#">v</a> / <a href="#">i</a> / <a href="#">g</a> / <a href="#">gif</a> ]</div>
@@ -50,135 +50,186 @@ $board_ID = 1;
                 cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
                 proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
             </div>
-
         </header>
 
-        <?php
-
-$query = ('SELECT posts.post_ID, users.user_name, posts.post_date, posts.post_pic, posts.post_pic_thumb, posts.post_content, posts.post_sticky_level, posts.parent_ID, posts.file_size, posts.file_name, posts.file_x, posts.file_y 
-FROM posts
-LEFT JOIN users ON posts.user_ID=users.user_ID
-WHERE board_ID=1 
-ORDER BY post_sticky_level DESC,post_ID DESC');
-$kask=$connection->prepare($query);
-$kask->bind_result( $post_ID, $user_name, $post_date, $post_pic, $post_pic_thumb, $post_content, $post_sticky_level, $parent_ID, $file_size, $file_name, $file_x, $file_y);
-$kask->execute();
-while($kask->fetch()){
-echo "post_ID-->".$post_ID."<br>"; 
-echo "user_name-->".$user_name."<br>";
-echo "post_date-->".$post_date."<br>";
-echo "post_pic-->".$post_pic."<br>";
-echo "post_pic_thumb-->".$post_pic_thumb."<br>";
-echo "post_content-->".$post_content."<br>";
-echo "post_sticky_level-->".$post_sticky_level."<br>";
-echo "parent_ID-->".$parent_ID, $file_size."<br>";
-echo "file_name-->".$file_name."<br>";
-echo "file_x-->".$file_x."<br>";
-echo "file_y-->".$file_y."<br>";
-echo "---------<br>";
-}
-
-        ?>
 
 
 
-            <?php
-                $query = ('SELECT posts.post_ID, users.user_name, posts.post_date, posts.post_pic, posts.post_pic_thumb, posts.post_content, posts.post_sticky_level, posts.parent_ID, posts.file_size, posts.file_name, posts.file_x, posts.file_y 
-                FROM posts
-                LEFT JOIN users ON posts.user_ID=users.user_ID
-                WHERE board_ID=1 
-                ORDER BY post_sticky_level DESC,post_ID DESC');
-                $kask=$connection->prepare($query);
-                $kask->bind_result( $post_ID, $user_name, $post_date, $post_pic, $post_pic_thumb, $post_content, $post_sticky_level, $parent_ID, $file_size, $file_name, $file_x, $file_y);
-                $kask->execute();
-                while($kask->fetch()){
-            ?>
-            <div class="thread">
+
+            <?php 
+            try {
+                
+                $stmt = $conn->prepare('SELECT thread.thread_ID, users.user_name, thread.post_date, thread.post_content, thread.sticky_level, thread.pic_ID
+                FROM thread
+                LEFT JOIN users ON thread.user_ID=users.user_ID
+                WHERE board_ID=:board_ID
+                ORDER BY thread.sticky_level DESC, thread.thread_ID DESC');
+
+                $stmt->execute(array('board_ID' => $board_ID));
+             
+                $result = $stmt->fetchAll();
+             
+                if ( count($result) ) {
+                    foreach($result as $thread_row) {
+                ?>
 
 
-                <div class="post-parent">
 
-                    <div class="file-info">File: <a href="#">1386011776979.jpg</a>-(5 KB, 258x195, laptop.jpg)</div>
-                    <a class="post-image" href="<?php echo $post_pic; ?>"><img src="<?php echo $post_pic_thumb; ?>"></a>
 
-                    <header class="post-meta">
-                        <span class="username"><?php echo $user_name; ?></span> <span class="post-date"><?php echo date('Y/m/d H:i:s', $post_date); ?></span> <a href="#" class="post-no">No. <?php echo $post_ID; ?></a>
-                    </header>
-                    <div class="post-content">
-                        <?php echo $post_content; ?>
+
+                    <?php
+                    $pic_ID = $thread_row['pic_ID'];
+                    try {
+                        
+                        $stmt = $conn->prepare('SELECT pic_ID, pic_url, pic_url_thumb, pic_size, pic_name, file_x, file_y
+                        FROM pictures
+                        WHERE pic_ID =:pic_ID');
+
+                        $stmt->execute(array('pic_ID' => $pic_ID));
+                     
+
+                        $thread_pic_info  = $stmt -> fetch();
+
+
+                        } catch(PDOException $e) {
+                            echo 'ERROR: ' . $e->getMessage();
+                        }
+                    ?>
+
+
+
+
+
+
+
+
+                <div class="thread">
+
+
+                    <div class="post-parent">
+
+                        <?php if ($thread_pic_info==True) { ?>
+                        <div class="file-info">File: <a href="#">1386011776979.jpg</a>-(<?php echo $thread_pic_info['pic_size']; ?> KB, 258x195, laptop.jpg)</div>
+                        <a class="post-image" href="<?php echo $thread_pic_info['post_pic']; ?>"><img src="<?php echo $thread_pic_info['post_pic_thumb']; ?>"></a>
+                        <?php } ?>
+                        <header class="post-meta">
+                            <span class="username"><?php echo $thread_row['user_name']; ?></span> <span class="post-date"><?php echo date('Y/m/d H:i:s', $thread_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $thread_row['thread_ID']; ?></a>
+                        </header>
+                        <div class="post-content">
+
+                            <?php echo $thread_row['post_content'];?>
+
+                        </div>
+
                     </div>
+
+
+
+
+                    <?php
+                    $thread_id=$thread_row['thread_ID'];
+
+
+                    try {
+                        
+                        $stmt = $conn->prepare('SELECT reply.reply_ID, users.user_name, reply.post_date, reply.post_content, reply.pic_ID
+                        FROM reply
+                        LEFT JOIN users ON reply.user_ID = users.user_ID
+                        WHERE thread_ID =:thread_ID
+                        ORDER BY reply.reply_ID DESC');
+
+                        $stmt->execute(array('thread_ID' => $thread_id));
+                     
+                        $result2 = $stmt->fetchAll();
+                     
+                        if ( count($result2) ) {
+                            foreach($result2 as $reply_row) {
+                    ?>
+
+
+
+
+                    <?php
+                    $pic_ID = $reply_row['pic_ID'];
+                    try {
+                        
+                        $stmt = $conn->prepare('SELECT pic_ID, pic_url, pic_url_thumb, pic_size, pic_name, file_x, file_y
+                        FROM pictures
+                        WHERE pic_ID =:pic_ID');
+
+                        $stmt->execute(array('pic_ID' => $pic_ID));
+                     
+
+                        $reply_pic_info  = $stmt -> fetch();
+
+
+                        } catch(PDOException $e) {
+                            echo 'ERROR: ' . $e->getMessage();
+                        }
+                    ?>
+
+
+
+
+                                        <div class="reply-container">
+                                            <div class="reply-arrows">>></div>
+                                            <div class="post-reply">
+                                                <header class="post-meta">
+                                                    <span class="username"><?php echo $reply_row['user_name']; ?></span> <span class="post-date"><?php echo date('Y/m/d H:i:s', $reply_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $reply_row['reply_ID']; ?></a>
+                                                    <?php if ($thread_pic_info==True) { ?>
+                                                    <div class="file-info">File: <a href="#">1386011776979.jpg</a>-(<?php echo $reply_pic_info['pic_size']; ?> KB, 258x195, laptop.jpg)</div>
+                                                    <a class="post-image" href="<?php echo $reply_pic_info['post_pic']; ?>"><img src="<?php echo $reply_pic_info['post_pic_thumb']; ?>"></a>
+                                                    <?php } ?>
+                                                </header>
+                                                   <div class="post-content">
+                                                    <?php echo $reply_row['post_content']; ?>
+                                                </div>
+                                               </div>
+                                               <div style="clear:both;"></div>
+                                        </div>
+                    <?php
+                            }  
+                        } else {
+                            echo "No rows returned.";
+                        }
+                    } catch(PDOException $e) {
+                        echo 'ERROR: ' . $e->getMessage();
+                    }
+
+
+                    ?>
+
+
+
+
 
                 </div>
                 <?php
-                    $query = ("SELECT posts.post_ID, users.user_name, posts.post_date, posts.post_pic, posts.post_pic_thumb, posts.post_content, posts.post_sticky_level, posts.parent_ID, posts.file_size, posts.file_name, posts.file_x, posts.file_y 
-                    FROM posts
-                    LEFT JOIN users ON posts.user_ID=users.user_ID
-                    WHERE posts.board_ID=1 AND posts.parent_ID='?'
-                    ORDER BY post_sticky_level DESC,post_ID DESC");
-                    $kask2=$connection2->prepare($query);
-                    
-                    $kask2->bind_result( $post_ID_2, $user_name_2, $post_date_2, $post_pic_2, $post_pic_thumb_2, $post_content_2, $post_sticky_level_2, $parent_ID_2, $file_size_2, $file_name_2, $file_x_2, $file_y_2);
-                    
-                    $kask->bind_param("i", $post_ID);
-
-                    $kask2->execute();
-                    while($kask2->fetch()){
-                ?>
-                        <div class="reply-container">
-                            <div class="reply-arrows">>></div>
-                            <div class="post-reply">
-                                <header class="post-meta">
-                                    <span class="username"><?php echo $user_name_2; ?></span> <span class="post-date"><?php echo date('Y/m/d H:i:s', $post_date_2); ?></span> <a href="#" class="post-no">No. <?php echo $post_ID_2; ?></a>
-                                </header>
-                                <div class="post-content">
-                                    <?php echo $post_content_2; ?>
-                                </div>
-                            </div>
-                            <div style="clear:both;"></div>
-                        </div>
-                <?php
+                        }  
+                    } else {
+                        echo "No threads.";
                     }
+                } catch(PDOException $e) {
+                    echo 'ERROR: ' . $e->getMessage();
+                }
+
+
                 ?>
 
-            </div>
-            <?php
-            }
-            $c
-            ?>
-
-<?php
-$id=1;
 
 
 
-try {
-    $conn = new PDO('mysql:host=localhost;dbname=4chan', USER, PASS);
-    $stmt = $conn->prepare('SELECT posts.post_ID, users.user_name, posts.post_date, posts.post_pic, posts.post_pic_thumb, posts.post_content, posts.post_sticky_level, posts.parent_ID, posts.file_size, posts.file_name, posts.file_x, posts.file_y 
-                    FROM posts
-                    LEFT JOIN users ON posts.user_ID=users.user_ID
-                    WHERE posts.board_ID=1 AND posts.parent_ID = :id
-                    ORDER BY post_sticky_level DESC,post_ID DESC');
 
-    $stmt->execute(array('id' => $id));
- 
-    $result = $stmt->fetchAll();
- 
-    if ( count($result) ) {
-        foreach($result as $row) {
-            print_r($row);
-            echo "<br> //*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*//<br>";
-            echo "<h1>ID =".$row['post_ID']." /parent_ID =". $row['parent_ID'] ."</h1>";
-        }  
-    } else {
-        echo "No rows returned.";
-    }
-} catch(PDOException $e) {
-    echo 'ERROR: ' . $e->getMessage();
-}
 
-echo "<br><br>";
-var_dump($result);
-?>
+
+
+
+
+
+
+
+
+
 
             <footer>
                 <div class="pagination">[<a href="#">1</a>] [<a href="#">2</a>] [<a href="#">3</a>] [<a href="#">4</a>] [<a href="#">5</a>]</div>
