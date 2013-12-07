@@ -11,8 +11,8 @@ CREATE TABLE thread (
 	poster_ip VARCHAR(30),
 	post_date INT,
 	post_content TEXT,
-	board_ID INT,
-	sticky_level INT,
+	board_ID INT NOT NULL,
+	sticky_level INT DEFAULT 0,
 	del_pass VARCHAR(20),
 	pic_ID INT
 );
@@ -75,16 +75,16 @@ CREATE TABLE users (
 	user_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	user_name VARCHAR(50),
 	user_pass VARCHAR(250),
-	premission_ID INT,
-	banned INT,
+	premission_ID INT DEFAULT 0,
+	banned INT DEFAULT 0,
 	ban_reason TEXT
 );
 
 CREATE TABLE premissions (
 	premisssion_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	user_ID INT,
-	level_ID INT,
-	board_ID INT
+	level_ID INT DEFAULT 0,
+	board_ID INT NOT NULL
 );
 
 CREATE TABLE level (
