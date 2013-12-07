@@ -1,21 +1,3 @@
-CREATE TABLE posts (
-	post_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	user_ID INT,
-	poster_ip VARCHAR(30),
-	post_date INT,
-	post_pic VARCHAR(100),
-	post_pic_thumb VARCHAR(100),
-	post_content TEXT,
-	post_sticky_level INT,
-	parent_ID INT,
-	board_ID INT,
-	del_password VARCHAR(20),
-	file_size INT,
-	file_name VARCHAR(50),
-	file_x INT,
-	file_y INT
-);
-
 CREATE TABLE boards (
 	board_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	board_meta TEXT,
@@ -23,11 +5,55 @@ CREATE TABLE boards (
 	board_name VARCHAR(40)
 );
 
+CREATE TABLE thread (
+	thread_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	user_ID INT,
+	poster_ip VARCHAR(30),
+	post_date INT,
+	post_content TEXT,
+	board_ID INT,
+	sticky_level INT,
+	del_pass VARCHAR(20),
+	pic_ID INT
+);
+
 CREATE TABLE reply (
+	reply_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	user_ID INT,
+	poster_ip VARCHAR(30),
+	post_date INT,
+	post_content TEXT,
+	thread_ID INT,
+	board_ID INT,
+	del_pass VARCHAR(20),
+	pic_ID INT
+);
+
+CREATE TABLE pictures (
+	pic_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	pic_url VARCHAR(220),
+	pic_url_thumb VARCHAR(220),
+	pic_size INT,
+	pic_name VARCHAR(50),
+	file_x INT,
+	file_y INT
+);
+
+CREATE TABLE reply_quote (
 	r_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	post_ID INT,
+	reply_ID INT,
 	r_parent_ID INT
 );
+
+CREATE TABLE thread_quote (
+	t_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	thread_ID INT,
+	reply_ID INT
+);
+
+
+
+
 
 CREATE TABLE articles (
 	article_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
