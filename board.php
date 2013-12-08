@@ -190,7 +190,7 @@ $board_ID = 1;
                     <?php
                             }  
                         } else {
-                            echo "No rows returned.";
+                            //echo "No rows returned.";
                         }
                     } catch(PDOException $e) {
                         echo 'ERROR: ' . $e->getMessage();
