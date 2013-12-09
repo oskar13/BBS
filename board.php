@@ -28,18 +28,18 @@ $board_ID = 1;
             </div>
 
             <div id="new-thread">
-                <form >
-                    <tbody>
-                        <table>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </table>
+                <form > 
+                    <tbody> 
+                        <table> 
+                            <tr> 
+                                <td></td> 
+                                <td></td> 
+                            </tr> 
+                        </table> 
             
-                    </tbody>
-                </form>
-            </div>
+                    </tbody> 
+                </form> 
+            </div> 
 
 
             <div class="global-message">
