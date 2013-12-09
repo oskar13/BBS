@@ -53,9 +53,6 @@ $board_ID = 1;
         </header>
 
 
-
-
-
             <?php 
             try {
                 
@@ -72,9 +69,6 @@ $board_ID = 1;
                 if ( count($result) ) {
                     foreach($result as $thread_row) {
                 ?>
-
-
-
 
 
                     <?php
@@ -97,12 +91,6 @@ $board_ID = 1;
                     ?>
 
 
-
-
-
-
-
-
                 <div class="thread">
 
 
@@ -122,9 +110,6 @@ $board_ID = 1;
                         </div>
 
                     </div>
-
-
-
 
                     <?php
                     $thread_id=$thread_row['thread_ID'];
@@ -146,9 +131,6 @@ $board_ID = 1;
                             foreach($result2 as $reply_row) {
                     ?>
 
-
-
-
                     <?php
                     $pic_ID = $reply_row['pic_ID'];
                     try {
@@ -167,8 +149,6 @@ $board_ID = 1;
                             echo 'ERROR: ' . $e->getMessage();
                         }
                     ?>
-
-
 
 
                                         <div class="reply-container">
@@ -200,9 +180,6 @@ $board_ID = 1;
                     ?>
 
 
-
-
-
                 </div>
                 <?php
                         }  
@@ -218,38 +195,10 @@ $board_ID = 1;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
             <footer>
                 <div class="pagination">[<a href="#">1</a>] [<a href="#">2</a>] [<a href="#">3</a>] [<a href="#">4</a>] [<a href="#">5</a>]</div>
                 <div class="board-list">[ <a href="#">b</a> / <a href="#">v</a> / <a href="#">i</a> / <a href="#">g</a> / <a href="#">gif</a> ]</div>
             </footer>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
