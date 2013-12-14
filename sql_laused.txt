@@ -55,3 +55,27 @@ LEFT JOIN users ON reply.user_ID = users.user_ID
 WHERE thread_ID =:thread_ID
 ORDER BY reply.reply_ID DESC
 LIMIT 0 , 30;
+
+/////////////////////////////////////////////////////////////////////////
+
+#Postitused
+SELECT posts.post_ID, users.user_name, posts.poster_ip, posts.post_date, posts.post_content, posts.sticky_level, posts.pic_ID
+FROM posts
+LEFT JOIN users ON posts.user_ID=users.user_ID
+WHERE board_ID=:board_ID AND parent_ID IS NULL
+ORDER BY posts.sticky_level DESC, last_reply_date DESC;
+
+#Vastused
+#Siin selgitan kuidas see päring toimib:
+#Algus on tavaline kus siis märgitakse ära mida tahetakse saada, kuid need andmed võet
+#FROM all tehakse alampäring mis võtab viis viimast vastust mis pea postitusele tehti
+#seejärel pea päringus järejestatakse postitused õiges järjekorras.
+
+SELECT p.post_ID, users.user_name, p.poster_ip, p.post_date, p.post_content, p.sticky_level, p.pic_ID
+FROM (SELECT post_ID, user_ID ,poster_ip, post_date, post_content, sticky_level, pic_ID, parent_ID
+	FROM posts
+	WHERE parent_ID=:parent_ID
+	ORDER BY post_ID DESC LIMIT 3) p
+LEFT JOIN users ON p.user_ID=users.user_ID
+ORDER BY p.post_ID;
+

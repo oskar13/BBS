@@ -5,8 +5,8 @@ CREATE TABLE boards (
 	board_name VARCHAR(40)
 );
 
-CREATE TABLE thread (
-	thread_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE posts (
+	post_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	user_ID INT,
 	poster_ip VARCHAR(30),
 	post_date INT,
@@ -14,19 +14,9 @@ CREATE TABLE thread (
 	board_ID INT NOT NULL,
 	sticky_level INT DEFAULT 0,
 	del_pass VARCHAR(20),
-	pic_ID INT
-);
-
-CREATE TABLE reply (
-	reply_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	user_ID INT,
-	poster_ip VARCHAR(30),
-	post_date INT,
-	post_content TEXT,
-	thread_ID INT,
-	board_ID INT,
-	del_pass VARCHAR(20),
-	pic_ID INT
+	pic_ID INT,
+	parent_ID INT DEFAULT NULL,
+	last_reply_date INT
 );
 
 CREATE TABLE pictures (
@@ -39,18 +29,11 @@ CREATE TABLE pictures (
 	file_y INT
 );
 
-CREATE TABLE reply_quote (
+CREATE TABLE quotes (
 	r_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	reply_ID INT,
+	post_ID INT,
 	r_parent_ID INT
 );
-
-CREATE TABLE thread_quote (
-	t_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	thread_ID INT,
-	reply_ID INT
-);
-
 
 
 
@@ -85,11 +68,6 @@ CREATE TABLE premissions (
 	user_ID INT,
 	level_ID INT DEFAULT 0,
 	board_ID INT NOT NULL
-);
-
-CREATE TABLE level (
-	level_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	description VARCHAR(200)
 );
 
 CREATE TABLE warnings (
