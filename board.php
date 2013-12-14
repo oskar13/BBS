@@ -56,23 +56,23 @@ $board_ID = 1;
             <?php 
             try {
                 
-                $stmt = $conn->prepare('SELECT thread.thread_ID, users.user_name, thread.post_date, thread.post_content, thread.sticky_level, thread.pic_ID
-                FROM thread
-                LEFT JOIN users ON thread.user_ID=users.user_ID
-                WHERE board_ID=:board_ID
-                ORDER BY thread.sticky_level DESC, thread.thread_ID DESC');
+                $stmt = $conn->prepare('SELECT posts.post_ID, users.user_name, posts.poster_ip, posts.post_date, posts.post_content, posts.sticky_level, posts.pic_ID
+                FROM posts
+                LEFT JOIN users ON posts.user_ID=users.user_ID
+                WHERE board_ID=:board_ID AND parent_ID IS NULL
+                ORDER BY posts.sticky_level DESC, last_reply_date DESC');
 
                 $stmt->execute(array('board_ID' => $board_ID));
              
                 $result = $stmt->fetchAll();
              
                 if ( count($result) ) {
-                    foreach($result as $thread_row) {
+                    foreach($result as $posts_row) {
                 ?>
 
 
                     <?php
-                    $pic_ID = $thread_row['pic_ID'];
+                    $pic_ID = $posts_row['pic_ID'];
                     try {
                         
                         $stmt = $conn->prepare('SELECT pic_ID, pic_url, pic_url_thumb, pic_size, pic_name, file_x, file_y
@@ -82,7 +82,7 @@ $board_ID = 1;
                         $stmt->execute(array('pic_ID' => $pic_ID));
                      
 
-                        $thread_pic_info  = $stmt -> fetch();
+                        $posts_pic_info  = $stmt -> fetch();
 
 
                         } catch(PDOException $e) {
@@ -96,233 +96,41 @@ $board_ID = 1;
 
                     <div class="post-parent">
 
-                        <?php if ($thread_pic_info==True) { ?>
-                        <div class="file-info">File: <a href="#">1386011776979.jpg</a>-(<?php echo $thread_pic_info['pic_size']; ?> KB, 258x195, laptop.jpg)</div>
-                        <a class="post-image" href="<?php echo $thread_pic_info['post_pic']; ?>"><img src="<?php echo $thread_pic_info['post_pic_thumb']; ?>"></a>
+                        <?php if ($posts_pic_info==True) { ?>
+                        <div class="file-info">File: <a href="#"><?php echo $posts_pic_info['pic_ID']; ?>.jpg</a>-(<?php echo $posts_pic_info['pic_size']; ?> KB, <?php echo $posts_pic_info['file_x']; ?>x<?php echo $posts_pic_info['file_y']; ?>, laptop.jpg)</div>
+                        <a class="post-image" href="<?php echo $posts_pic_info['post_pic']; ?>"><img src="<?php echo $posts_pic_info['post_pic_thumb']; ?>"></a>
                         <?php } ?>
                         <header class="post-meta">
-                            <span class="username"><?php echo $thread_row['user_name']; ?></span> <span class="post-date"><?php echo date('Y/m/d H:i:s', $thread_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $thread_row['thread_ID']; ?></a>
+                            <span class="username"><?php echo $posts_row['user_name']; ?></span> <span class="post-date"><?php echo date('Y/m/d H:i:s', $posts_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $posts_row['post_ID']; ?></a>
                         </header>
                         <div class="post-content">
 
-                            <?php echo $thread_row['post_content'];?>
+                            <?php echo $posts_row['post_content'];?>
 
                         </div>
 
                     </div>
 
                     <?php
-                    $thread_id=$thread_row['thread_ID'];
-
+                    $parent_ID=$posts_row['post_ID'];
 
                     try {
                         
-                        $stmt = $conn->prepare('SELECT reply.reply_ID, users.user_name, reply.post_date, reply.post_content, reply.pic_ID
-                        FROM reply
-                        LEFT JOIN users ON reply.user_ID = users.user_ID
-                        WHERE thread_ID =:thread_ID
-                        ORDER BY reply.reply_ID DESC');
+                        $stmt = $conn->prepare('SELECT p.post_ID, users.user_name, p.poster_ip, p.post_date, p.post_content, p.pic_ID
+                        FROM (SELECT post_ID, user_ID ,poster_ip, post_date, post_content, pic_ID, parent_ID
+                            FROM posts
+                            WHERE parent_ID=:parent_ID
+                            ORDER BY post_ID DESC LIMIT 3) p
+                        LEFT JOIN users ON p.user_ID=users.user_ID
+                        ORDER BY p.post_ID');
 
-                        $stmt->execute(array('thread_ID' => $thread_id));
+                        $stmt->execute(array('parent_ID' => $parent_ID));
                      
                         $result2 = $stmt->fetchAll();
                      
                         if ( count($result2) ) {
                             foreach($result2 as $reply_row) {
                     ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -351,9 +159,9 @@ $board_ID = 1;
                                             <div class="reply-arrows">>></div>
                                             <div class="post-reply">
                                                 <header class="post-meta">
-                                                    <span class="username"><?php echo $reply_row['user_name']; ?></span> <span class="post-date"><?php echo date('Y/m/d H:i:s', $reply_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $reply_row['reply_ID']; ?></a>
-                                                    <?php if ($thread_pic_info==True) { ?>
-                                                    <div class="file-info">File: <a href="#">1386011776979.jpg</a>-(<?php echo $reply_pic_info['pic_size']; ?> KB, 258x195, laptop.jpg)</div>
+                                                    <span class="username"><?php echo $reply_row['user_name']; ?></span> <span class="post-date"><?php echo date('Y/m/d H:i:s', $reply_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $reply_row['post_ID']; ?></a>
+                                                    <?php if ($posts_pic_info==True) { ?>
+                                                    <div class="file-info">File: <a href="#"><?php echo $reply_pic_info['pic_ID']; ?>.jpg</a>-(<?php echo $reply_pic_info['pic_size']; ?> KB, <?php echo $posts_pic_info['file_x']; ?>x<?php echo $posts_pic_info['file_y']; ?>, laptop.jpg)</div>
                                                     <a class="post-image" href="<?php echo $reply_pic_info['post_pic']; ?>"><img src="<?php echo $reply_pic_info['post_pic_thumb']; ?>"></a>
                                                     <?php } ?>
                                                 </header>
