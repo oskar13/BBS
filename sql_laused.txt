@@ -88,3 +88,6 @@ FROM (SELECT post_ID, user_ID ,poster_ip, post_date, post_content, pic_ID, paren
 LEFT JOIN users ON p.user_ID=users.user_ID
 ORDER BY p.post_ID;
 
+
+
+

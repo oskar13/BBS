@@ -56,6 +56,51 @@ a:hover {
     text-shadow: 0 0 10px #FF1160;
 }
 
+#new-thread table {
+	margin: 0 auto;
+	border-spacing: 2px;
+	border-collapse: separate;
+}
+
+#new-thread .new-input {
+	background: none repeat scroll 0 0 rgba(31, 145, 197, 0.04);
+    border: 1px solid rgba(9, 123, 133, 0.34);
+    border-radius: 0;
+    box-shadow: 0 0 14px rgba(0, 200, 255, 0.12) inset;
+    font-size: 0.9em;
+    padding: 0.15em;
+    text-shadow: 0 0 4px #00AFFF;
+}
+
+#new-thread td{
+	padding: 0;
+}
+
+#new-thread .label-col{
+	background-color: rgba(8, 47, 58, 0.41);
+    border: 1px solid #1F4F5F;
+    font-size: 0.9em;
+    line-height: 1.1em;
+    padding: 0.3em;
+}
+
+#new-thread input[type="submit"] {
+	background-color: rgba(45, 143, 160, 0.23);
+    border: 1px solid rgba(91, 132, 152, 0.52);
+    margin-left: 0.5em;
+    font-size: 0.9em;
+    padding: 0.15em 0.4em;
+    border-radius: 0.5em;
+    text-shadow: 0 0 3px rgba(255,255,255,0);
+    transition: all 0.5s ease;
+}
+#new-thread input[type="submit"]:hover {
+    border: 1px solid rgba(95, 188, 231, 0.76);
+    box-shadow: 0 0 10px rgba(1, 205, 241, 0.48) inset;
+    text-shadow: 0 0 5px rgba(255,255,255,0.9);
+    color: #fff;
+}
+
 .thread {
 	border-bottom: 2px solid #1C717B;
 	padding: 1em 0;

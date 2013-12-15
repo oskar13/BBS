@@ -12,8 +12,8 @@ $board_ID = 1;
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-
         <link rel="stylesheet" href="css/normalize.css">
+
         <link rel="stylesheet" href="css/board.css">
     </head>
     <body>
@@ -28,28 +28,56 @@ $board_ID = 1;
             </div>
 
             <div id="new-thread">
-                <form > 
-                    <tbody> 
+                <form action="?"> 
                         <table> 
                             <tr> 
-                                <td></td> 
+                                <td class="label-col">Name</td> 
+                                <td><input class="new-input" type="text" name="name" /></td> 
+                            </tr>
+                            <tr> 
+                                <td class="label-col">Email</td> 
+                                <td><input class="new-input" type="text" name="email"></td> 
+                            </tr> 
+                            <tr> 
+                                <td class="label-col">Subject</td> 
+                                <td><input class="new-input" type="text" name="subject"><input type="submit" value="Submit"></td> 
+                            </tr> 
+                            <tr> 
+                                <td class="label-col">Comment</td> 
+                                <td><textarea class="new-input" name="comment"></textarea></td> 
+                            </tr> 
+                            <tr> 
+                                <td class="label-col">File</td> 
                                 <td></td> 
                             </tr> 
                         </table> 
-            
-                    </tbody> 
                 </form> 
             </div> 
 
 
+
+
+            <?php
+            try {
+                
+                $stmt = $conn->prepare('SELECT message
+                FROM global_message
+                ORDER BY message_ID DESC');
+
+                $stmt->execute();
+                 
+
+                $glob_msg = $stmt -> fetch();
+
+
+                } catch(PDOException $e) {
+                    echo 'ERROR: ' . $e->getMessage();
+                }
+            if ($glob_msg==True) { ?>
             <div class="global-message">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <?php echo "<p>". $glob_msg['message'] ."</p>"; ?>
             </div>
+            <?php } ?>
         </header>
 
 

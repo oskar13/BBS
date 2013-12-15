@@ -75,3 +75,8 @@ CREATE TABLE warnings (
 	user_ID INT,
 	comment VARCHAR(200)
 );
+
+CREATE TABLE global_message (
+	message_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	message TEXT
+);
