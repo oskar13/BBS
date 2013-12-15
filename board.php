@@ -97,7 +97,7 @@ $board_ID = 1;
                     <div class="post-parent">
 
                         <?php if ($posts_pic_info==True) { ?>
-                        <div class="file-info">File: <a href="#"><?php echo $posts_pic_info['pic_ID']; ?>.jpg</a>-(<?php echo $posts_pic_info['pic_size']; ?> KB, <?php echo $posts_pic_info['file_x']; ?>x<?php echo $posts_pic_info['file_y']; ?>, laptop.jpg)</div>
+                        <div class="file-info">File: <a href="#"><?php echo $posts_pic_info['pic_ID']; ?>.jpg</a>-(<?php echo $posts_pic_info['pic_size']; ?> KB, <?php echo $posts_pic_info['file_x']; ?>x<?php echo $posts_pic_info['file_y']; ?>, <?php echo $posts_pic_info['pic_name']; ?>)</div>
                         <a class="post-image" href="<?php echo $posts_pic_info['post_pic']; ?>"><img src="<?php echo $posts_pic_info['post_pic_thumb']; ?>"></a>
                         <?php } ?>
                         <header class="post-meta">
@@ -160,8 +160,8 @@ $board_ID = 1;
                                             <div class="post-reply">
                                                 <header class="post-meta">
                                                     <span class="username"><?php echo $reply_row['user_name']; ?></span> <span class="post-date"><?php echo date('Y/m/d H:i:s', $reply_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $reply_row['post_ID']; ?></a>
-                                                    <?php if ($posts_pic_info==True) { ?>
-                                                    <div class="file-info">File: <a href="#"><?php echo $reply_pic_info['pic_ID']; ?>.jpg</a>-(<?php echo $reply_pic_info['pic_size']; ?> KB, <?php echo $posts_pic_info['file_x']; ?>x<?php echo $posts_pic_info['file_y']; ?>, laptop.jpg)</div>
+                                                    <?php if ($reply_pic_info==True) { ?>
+                                                    <div class="file-info">File: <a href="#"><?php echo $reply_pic_info['pic_ID']; ?>.jpg</a>-(<?php echo $reply_pic_info['pic_size']; ?> KB, <?php echo $reply_pic_info['file_x']; ?>x<?php echo $reply_pic_info['file_y']; ?>, <?php echo $reply_pic_info['pic_name']; ?>)</div>
                                                     <a class="post-image" href="<?php echo $reply_pic_info['post_pic']; ?>"><img src="<?php echo $reply_pic_info['post_pic_thumb']; ?>"></a>
                                                     <?php } ?>
                                                 </header>
