@@ -65,6 +65,15 @@ LEFT JOIN users ON posts.user_ID=users.user_ID
 WHERE board_ID=:board_ID AND parent_ID IS NULL
 ORDER BY posts.sticky_level DESC, last_reply_date DESC;
 
+#Prandatud, lisatud admin level
+SELECT posts.post_ID, users.user_name, premissions.level, posts.poster_ip, posts.post_date, posts.post_content, posts.sticky_level, posts.pic_ID
+FROM posts
+LEFT JOIN users ON posts.user_ID = users.user_ID
+LEFT JOIN premissions ON posts.user_ID = premissions.premission_ID
+WHERE posts.board_ID =1
+AND posts.parent_ID IS NULL
+ORDER BY posts.sticky_level DESC , posts.last_reply_date DESC
+
 #Vastused
 #Siin selgitan kuidas see päring toimib:
 #Algus on tavaline kus siis märgitakse ära mida tahetakse saada, kuid need andmed võet

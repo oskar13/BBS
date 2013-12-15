@@ -64,9 +64,9 @@ CREATE TABLE users (
 );
 
 CREATE TABLE premissions (
-	premisssion_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	premission_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	user_ID INT,
-	level_ID INT DEFAULT 0,
+	level INT DEFAULT 0,
 	board_ID INT NOT NULL
 );
 

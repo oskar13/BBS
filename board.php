@@ -56,11 +56,12 @@ $board_ID = 1;
             <?php 
             try {
                 
-                $stmt = $conn->prepare('SELECT posts.post_ID, users.user_name, posts.poster_ip, posts.post_date, posts.post_content, posts.sticky_level, posts.pic_ID
+                $stmt = $conn->prepare('SELECT posts.post_ID, users.user_name, premissions.level, posts.poster_ip, posts.post_date, posts.post_content, posts.sticky_level, posts.pic_ID
                 FROM posts
-                LEFT JOIN users ON posts.user_ID=users.user_ID
-                WHERE board_ID=:board_ID AND parent_ID IS NULL
-                ORDER BY posts.sticky_level DESC, last_reply_date DESC');
+                LEFT JOIN users ON posts.user_ID = users.user_ID
+                LEFT JOIN premissions ON posts.user_ID = premissions.premission_ID
+                WHERE posts.board_ID =:board_ID AND posts.parent_ID IS NULL
+                ORDER BY posts.sticky_level DESC , posts.last_reply_date DESC');
 
                 $stmt->execute(array('board_ID' => $board_ID));
              
@@ -112,6 +113,11 @@ $board_ID = 1;
                     </div>
 
                     <?php
+                    /*
+                    ----------------------------------------------------------------------------------------------
+                    ----------------------------------------- POST REPLY -----------------------------------------
+                    ----------------------------------------------------------------------------------------------                    
+                    */
                     $parent_ID=$posts_row['post_ID'];
 
                     try {
