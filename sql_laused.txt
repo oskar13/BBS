@@ -91,3 +91,5 @@ ORDER BY p.post_ID;
 
 
 
+INSERT INTO pictures (pic_newname ,pic_size ,pic_name ,file_x ,file_y)
+VALUES ('upload/123.jpg', 'thumb/123.jpg', '666', '123.jpg', '111', '222');

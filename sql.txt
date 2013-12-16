@@ -10,6 +10,9 @@ CREATE TABLE posts (
 	user_ID INT,
 	poster_ip VARCHAR(30),
 	post_date INT,
+	post_name VARCHAR(100),
+	post_email VARCHAR(100),
+	post_subject VARCHAR(100),
 	post_content TEXT,
 	board_ID INT NOT NULL,
 	sticky_level INT DEFAULT 0,
@@ -21,8 +24,8 @@ CREATE TABLE posts (
 
 CREATE TABLE pictures (
 	pic_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	pic_url VARCHAR(220),
-	pic_url_thumb VARCHAR(220),
+	pic_newname VARCHAR(220),
+	pic_thumbname VARCHAR(200),
 	pic_size INT,
 	pic_name VARCHAR(50),
 	file_x INT,

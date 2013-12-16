@@ -28,7 +28,7 @@ $board_ID = 1;
             </div>
 
             <div id="new-thread">
-                <form action="?"> 
+                <form action="upload.php" method="post" enctype="multipart/form-data">
                         <table> 
                             <tr> 
                                 <td class="label-col">Name</td> 
@@ -48,7 +48,7 @@ $board_ID = 1;
                             </tr> 
                             <tr> 
                                 <td class="label-col">File</td> 
-                                <td></td> 
+                                <td><input type="file" name="file" id="file"></td> 
                             </tr> 
                         </table> 
                 </form> 
@@ -104,7 +104,7 @@ $board_ID = 1;
                     $pic_ID = $posts_row['pic_ID'];
                     try {
                         
-                        $stmt = $conn->prepare('SELECT pic_ID, pic_url, pic_url_thumb, pic_size, pic_name, file_x, file_y
+                        $stmt = $conn->prepare('SELECT pic_ID, pic_newname, pic_thumbname, pic_size, pic_name, file_x, file_y
                         FROM pictures
                         WHERE pic_ID =:pic_ID');
 
@@ -126,8 +126,8 @@ $board_ID = 1;
                     <div class="post-parent">
 
                         <?php if ($posts_pic_info==True) { ?>
-                        <div class="file-info">File: <a href="#"><?php echo $posts_pic_info['pic_ID']; ?>.jpg</a>-(<?php echo $posts_pic_info['pic_size']; ?> KB, <?php echo $posts_pic_info['file_x']; ?>x<?php echo $posts_pic_info['file_y']; ?>, <?php echo $posts_pic_info['pic_name']; ?>)</div>
-                        <a class="post-image" href="<?php echo $posts_pic_info['post_pic']; ?>"><img src="<?php echo $posts_pic_info['post_pic_thumb']; ?>"></a>
+                        <div class="file-info">File: <a href="#"><?php echo $posts_pic_info['pic_newname']; ?></a>-(<?php echo $posts_pic_info['pic_size']; ?> KB, <?php echo $posts_pic_info['file_x']; ?>x<?php echo $posts_pic_info['file_y']; ?>, <?php echo $posts_pic_info['pic_name']; ?>)</div>
+                        <a class="post-image" href="<?php echo "upload/" . $posts_pic_info['pic_newname']; ?>"><img src="<?php echo "upload/" . $posts_pic_info['pic_thumbname']; ?>"></a>
                         <?php } ?>
                         <header class="post-meta">
                             <span class="username"><?php echo $posts_row['user_name']; ?></span> <span class="post-date"><?php echo date('Y/m/d H:i:s', $posts_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $posts_row['post_ID']; ?></a>
@@ -173,7 +173,7 @@ $board_ID = 1;
                     $pic_ID = $reply_row['pic_ID'];
                     try {
                         
-                        $stmt = $conn->prepare('SELECT pic_ID, pic_url, pic_url_thumb, pic_size, pic_name, file_x, file_y
+                        $stmt = $conn->prepare('SELECT pic_ID, pic_newname, pic_thumbname, pic_size, pic_name, file_x, file_y
                         FROM pictures
                         WHERE pic_ID =:pic_ID');
 
@@ -195,8 +195,8 @@ $board_ID = 1;
                                                 <header class="post-meta">
                                                     <span class="username"><?php echo $reply_row['user_name']; ?></span> <span class="post-date"><?php echo date('Y/m/d H:i:s', $reply_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $reply_row['post_ID']; ?></a>
                                                     <?php if ($reply_pic_info==True) { ?>
-                                                    <div class="file-info">File: <a href="#"><?php echo $reply_pic_info['pic_ID']; ?>.jpg</a>-(<?php echo $reply_pic_info['pic_size']; ?> KB, <?php echo $reply_pic_info['file_x']; ?>x<?php echo $reply_pic_info['file_y']; ?>, <?php echo $reply_pic_info['pic_name']; ?>)</div>
-                                                    <a class="post-image" href="<?php echo $reply_pic_info['post_pic']; ?>"><img src="<?php echo $reply_pic_info['post_pic_thumb']; ?>"></a>
+                                                    <div class="file-info">File: <a href="#"><?php echo $reply_pic_info['pic_newname']; ?>.jpg</a>-(<?php echo $reply_pic_info['pic_size']; ?> KB, <?php echo $reply_pic_info['file_x']; ?>x<?php echo $reply_pic_info['file_y']; ?>, <?php echo $reply_pic_info['pic_name']; ?>)</div>
+                                                    <a class="post-image" href="<?php echo "upload/" . $reply_pic_info['pic_newname']; ?>"><img src="<?php echo "upload/" . $reply_pic_info['pic_thumbname']; ?>"></a>
                                                     <?php } ?>
                                                 </header>
                                                    <div class="post-content">
