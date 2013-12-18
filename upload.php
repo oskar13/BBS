@@ -6,13 +6,29 @@ session_start();
 if (!isset($_POST['board_ID'])) {
   exit();
 }
-
-
-?>
-<?php
+$image_skip = false;
+$pic_ID = NULL;
 $allowedExts = array("gif", "jpeg", "jpg", "png");
 $temp = explode(".", $_FILES["file"]["name"]);
 $extension = end($temp);
+
+if (empty($_FILES['file']['name'])) {
+    
+    if (isset($_POST['parent_ID'])) {
+      $image_skip = true;
+    } else {
+      echo "no image selected, error";
+      exit();
+    }
+}
+
+if ($image_skip == false) {
+
+
+
+
+
+
 if ((($_FILES["file"]["type"] == "image/gif")
 || ($_FILES["file"]["type"] == "image/jpeg")
 || ($_FILES["file"]["type"] == "image/jpg")
@@ -35,27 +51,22 @@ if ((($_FILES["file"]["type"] == "image/gif")
 
     $name = $_FILES["file"]["name"];
     $end_temp = explode(".", $name);
-	$ext = end($end_temp);
-	$pic_newname_no_ext = time().mt_rand(1,1000);
-	$pic_newname = $pic_newname_no_ext.".".$ext;
-
-
-
-	
-
+  $ext = end($end_temp);
+  $pic_newname_no_ext = time().mt_rand(1,1000);
+  $pic_newname = $pic_newname_no_ext.".".$ext;
 
 
 
 
     if (file_exists("upload/" . $pic_newname))
       {
-      	$pic_newname = ($pic_newname.mt_rand(1,100));
+        $pic_newname = ($pic_newname.mt_rand(1,100));
       }
 
 
     if (file_exists("upload/" . $pic_newname))
       {
-      	echo "<h1>YOU IS WINRAR</h1>";
+        echo "<h1>YOU IS WINRAR</h1>";
       echo $pic_newname . " already exists. ";
       }
     else
@@ -74,17 +85,17 @@ if ((($_FILES["file"]["type"] == "image/gif")
       $file_x = $width;
       $file_y = $height;
 
-	    try {
-	              
-	        $stmt = $conn->prepare("INSERT INTO pictures (pic_newname ,pic_thumbname ,pic_size ,pic_name ,file_x ,file_y)
-			VALUES (:pic_newname, :pic_thumbname, :pic_size, :pic_name, :file_x, :file_y)");
-	        $stmt->execute(array('pic_newname' => $pic_newname, 'pic_thumbname' => $pic_thumbname, 'pic_size' => $pic_size, 'pic_name' => $pic_name ,'file_x' => $file_x ,'file_y' => $file_y));
-	        echo "<h1>";
-	        $pic_ID = $conn->lastInsertId();
-	        echo "</h1>";
-	        } catch(PDOException $e) {
-	            echo 'ERROR: ' . $e->getMessage();
-	        }
+      try {
+                
+          $stmt = $conn->prepare("INSERT INTO pictures (pic_newname ,pic_thumbname ,pic_size ,pic_name ,file_x ,file_y)
+          VALUES (:pic_newname, :pic_thumbname, :pic_size, :pic_name, :file_x, :file_y)");
+          $stmt->execute(array('pic_newname' => $pic_newname, 'pic_thumbname' => $pic_thumbname, 'pic_size' => $pic_size, 'pic_name' => $pic_name ,'file_x' => $file_x ,'file_y' => $file_y));
+          echo "<h1>";
+          $pic_ID = $conn->lastInsertId();
+          echo "</h1>";
+          } catch(PDOException $e) {
+              echo 'ERROR: ' . $e->getMessage();
+          }
 
 
 
@@ -168,24 +179,23 @@ if ((($_FILES["file"]["type"] == "image/gif")
 
 
 
-
+$last_reply_date = time();
 
 
 
 if (isset($_POST['parent_ID'])) {
-  $parent_ID = $_POST['parent_ID'];
   $thumb_size = 125;
+            
 } else {
-  $parent_ID = NULL;
   $thumb_size = 250;
 }
 
 if ($file_x >= $file_y) {
-	$width = $thumb_size;
-	$height = ($file_y*($width/$file_x));
+  $width = $thumb_size;
+  $height = ($file_y*($width/$file_x));
 } else {
-	$height = $thumb_size;
-	$width = ($file_x*($height/$file_y));
+  $height = $thumb_size;
+  $width = ($file_x*($height/$file_y));
 }
 
 $pic_url = "upload/" . $pic_newname;
@@ -193,6 +203,53 @@ $pic_url_thumb = "upload/" . "thumb_" .$pic_newname_no_ext.".jpg";
 
 
 img_resize($pic_url, $pic_url_thumb, $width, $height, $rgb = 0x000000, $quality = 50);
+     }
+    }
+  }
+else
+  {
+  echo "Invalid file";
+  exit();
+  }
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+$last_reply_date = time();
+if (isset($_POST['parent_ID'])) {
+  $parent_ID = $_POST['parent_ID'];
+  try {
+    $stmt = $conn->prepare('UPDATE posts 
+    SET last_reply_date = :last_time
+    WHERE post_ID =:parent_ID');
+
+    $stmt->execute(array('last_time' => $last_reply_date, 'parent_ID' => $parent_ID));
+    } catch(PDOException $e) {
+        echo 'ERROR: ' . $e->getMessage();
+    }
+} else {
+  $parent_ID = NULL;
+}
+
+
 
 
 
@@ -206,7 +263,8 @@ $post_content = NULL;
 $board_ID = $_POST['board_ID'];
 $sticky_level = 0;
 $del_pass = "asdf";
-$last_reply_date = time();
+
+
 
 
 if (isset($_POST['name'])) {
@@ -259,13 +317,7 @@ echo "1111111";
 
 
 
-      }
-    }
-  }
-else
-  {
-  echo "Invalid file";
-  }
+
 
   echo "<pre>";
   echo var_dump($_FILES);

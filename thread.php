@@ -3,33 +3,24 @@ require('config.php');
 session_start();
 
 
-if (isset($_REQUEST['board_url'])) {
-    $board_url = $_REQUEST['board_url'];
+if (isset($_REQUEST['post_ID'])) {
+    $post_ID = $_REQUEST['post_ID'];
 } else {
-    echo "No board specified";
+    echo "No post specified";
     exit();
 }
 
-if (isset($_REQUEST['page_no'])) {
-    $page_no = $_REQUEST['page_no'];
-} else {
-    $page_no = 0;
-}
-
-//LIMIT jaoks, määrab mitmendast hakatakse kuvama postitusi
-$skip = $page_no * POSTS_PER_PAGE;
-
-// hea või halb otsus? kas kontrollida enne, kas tahvel on olemas, või teha suurem päring kõigile tahvlitele ning
-// siis vaadata kas tahvel on olemas ja
-// pärast saab neid andmeid kasutada tahvlite nimekirja loomisel
+$board_url = NULL;
+if (isset($_REQUEST['board_url'])) {
+    $board_url = $_REQUEST['board_url'];
+} 
 
 try {
     
     $stmt = $conn->prepare('SELECT board_ID, board_meta, board_url, board_name
     FROM boards
-    WHERE board_url = :board_url');
-
-    $stmt->execute(array('board_url' => $board_url));
+    WHERE board_ID = (SELECT board_ID FROM posts WHERE post_ID = :post_ID)');
+    $stmt->execute(array('post_ID' => $post_ID));
      
     $boards = $stmt -> fetch();
 
@@ -37,13 +28,15 @@ try {
         echo 'ERROR: ' . $e->getMessage();
     }
 
-$board_ID = $boards['board_ID'];
-
 if ($boards['board_ID'] != True) {
     echo "No board found";
     exit();
 }
 
+if ($boards['board_url'] != $board_url) {
+    echo "wrong url";
+    exit();
+}
 
 ?>
 
@@ -99,6 +92,7 @@ if ($boards['board_ID'] != True) {
             </div>
             <div id="new-thread">
                 <form action="<?php echo BASE_PATH; ?>upload.php" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="parent_ID" value="<?php echo $post_ID; ?>">
                     <input type="hidden" name="board_ID" value="<?php echo $board_ID; ?>">
                         <table> 
                             <tr> 
@@ -154,41 +148,21 @@ if ($boards['board_ID'] != True) {
 
             <?php 
             try {
-                $ppp = POSTS_PER_PAGE;
                 $stmt = $conn->prepare('SELECT posts.post_ID, users.user_name, premissions.level, posts.poster_ip, posts.post_date, posts.post_content, posts.sticky_level, posts.pic_ID
                 FROM posts
                 LEFT JOIN users ON posts.user_ID = users.user_ID
                 LEFT JOIN premissions ON posts.user_ID = premissions.premission_ID
-                WHERE posts.board_ID =:board_ID AND posts.parent_ID IS NULL
-                ORDER BY posts.sticky_level DESC , posts.last_reply_date DESC
-                LIMIT :skip,:ppp');
-/*
-                $stmt->execute(array('board_ID' => $board_ID, 'ppp' => POSTS_PER_PAGE));
+                WHERE posts.post_ID =:post_ID ');
+
+                $stmt->execute(array('post_ID' => $post_ID));
              
-                $result = $stmt->fetchAll();
-                //PDO EI LASE LIMITile seada parameetrit mis pole numbrina määratud
-                //Peab kasutama bindParam();  
-*/
+                $posts_row = $stmt->fetch();
 
-    $stmt->bindParam(':board_ID', $board_ID, PDO::PARAM_INT);
-    $stmt->bindParam(':skip', $skip, PDO::PARAM_INT);
-    $stmt->bindParam(':ppp', $ppp, PDO::PARAM_INT);
-
-    $stmt->execute();
-
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } catch(PDOException $e) {
+                    echo 'ERROR: ' . $e->getMessage();
+                }
 
 
-
-
-
-                $row_count = count($result);
-                if ( $row_count ) {
-                    foreach($result as $posts_row) {
-                ?>
-
-
-                    <?php
                     $pic_ID = $posts_row['pic_ID'];
                     try {
                         
@@ -218,8 +192,7 @@ if ($boards['board_ID'] != True) {
                         <a class="post-image" href="<?php echo BASE_PATH."upload/" . $posts_pic_info['pic_newname']; ?>"><img src="<?php echo BASE_PATH."upload/" . $posts_pic_info['pic_thumbname']; ?>"></a>
                         <?php } ?>
                         <header class="post-meta">
-                            
-                            <span class="username"><?php if ($posts_row['user_name'] ) {  echo $posts_row['user_name']; } else { echo "Anonymous"; }?></span> <span class="post-date"><?php echo date('Y/m/d H:i:s', $posts_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $posts_row['post_ID']; ?></a>  [<a href="<?php echo BASE_PATH . $board_url ."/res/" .$posts_row['post_ID']; ?>">Reply</a>]</span>
+                            <span class="username"><?php if ($posts_row['user_name'] ) {  echo $posts_row['user_name']; } else { echo "Anonymous"; }?></span> <span class="post-date"><?php echo date('Y/m/d H:i:s', $posts_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $posts_row['post_ID']; ?></a>
                         </header>
                         <div class="post-content">
 
@@ -235,19 +208,16 @@ if ($boards['board_ID'] != True) {
                     ----------------------------------------- POST REPLY -----------------------------------------
                     ----------------------------------------------------------------------------------------------                    
                     */
-                    $parent_ID=$posts_row['post_ID'];
-
+                   
                     try {
                         
                         $stmt = $conn->prepare('SELECT p.post_ID, users.user_name, p.poster_ip, p.post_date, p.post_content, p.pic_ID
-                        FROM (SELECT post_ID, user_ID ,poster_ip, post_date, post_content, pic_ID, parent_ID
-                            FROM posts
-                            WHERE parent_ID=:parent_ID
-                            ORDER BY post_ID DESC LIMIT 3) p
+                        FROM posts p
                         LEFT JOIN users ON p.user_ID=users.user_ID
+                        WHERE p.parent_ID = :parent_ID
                         ORDER BY p.post_ID');
 
-                        $stmt->execute(array('parent_ID' => $parent_ID));
+                        $stmt->execute(array('parent_ID' => $post_ID));
                      
                         $result2 = $stmt->fetchAll();
                      
@@ -308,44 +278,10 @@ if ($boards['board_ID'] != True) {
 
                     <div style="clear:both;"></div>
                 </div>
-                <?php
-                        }  
-                    } else {
-                        echo "No threads.";
-                    }
-                } catch(PDOException $e) {
-                    echo 'ERROR: ' . $e->getMessage();
-                }
-
-
-                ?>
-
-
+ 
 
             <footer>
-            <div class="pagination">
-                <?php 
-                try {
-                    
-                    $stmt = $conn->prepare('SELECT COUNT( * )
-                    FROM posts
-                    WHERE board_ID =:board_ID AND parent_ID IS NULL');
 
-                    $stmt->execute(array('board_ID' => $board_ID));
-                     
-                    $count_posts = $stmt -> fetch();
-
-                    } catch(PDOException $e) {
-                        echo 'ERROR: ' . $e->getMessage();
-                    }
-
-
-                $page_count = ($count_posts['COUNT( * )'] / POSTS_PER_PAGE);
-                for ($i=0; $i < $page_count; $i++) { 
-                    echo "[<a href='". BASE_PATH . $board_url ."/".$i."'>". $i ."</a>] ";
-                }
-                ?>
-            </div>
 
                 
                  <div class="board-list">[
