@@ -1,10 +1,8 @@
-RewriteEngine on
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME}\.php -f
-RewriteRule ^([^/]+)/$ $1.php 
 
-# Forces a trailing slash to be added
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !(\.[a-zA-Z0-9]{1,5}|/)$
-RewriteRule (.*)$ /$1/ [R=301,L]
+RewriteEngine On
+
+RewriteCond %{REQUEST_URI} !(/$|\.|^$)
+RewriteRule (.*) %{REQUEST_URI}/ [R=301,L]
+
+RewriteRule ^([a-z]+)\/?$ board.php?board_url=$1 [NC]
+RewriteRule ^([a-z]+)\/([0-9]+)\/?$ board.php?board_url=$1&page_no=$2 [NC]

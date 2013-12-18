@@ -2,6 +2,12 @@
 require('config.php');
 session_set_cookie_params(1200, '/bbs');
 session_start();
+
+if (!isset($_POST['board_ID'])) {
+  exit();
+}
+
+
 ?>
 <?php
 $allowedExts = array("gif", "jpeg", "jpg", "png");
@@ -160,11 +166,25 @@ if ((($_FILES["file"]["type"] == "image/gif")
     }
 */
 
+
+
+
+
+
+
+if (isset($_POST['parent_ID'])) {
+  $parent_ID = $_POST['parent_ID'];
+  $thumb_size = 125;
+} else {
+  $parent_ID = NULL;
+  $thumb_size = 250;
+}
+
 if ($file_x >= $file_y) {
-	$width = 250;
+	$width = $thumb_size;
 	$height = ($file_y*($width/$file_x));
 } else {
-	$height = 250;
+	$height = $thumb_size;
 	$width = ($file_x*($height/$file_y));
 }
 
@@ -176,21 +196,14 @@ img_resize($pic_url, $pic_url_thumb, $width, $height, $rgb = 0x000000, $quality 
 
 
 
-
-
-if (isset($_POST['parent_ID'])) {
-  $parent_ID = $_POST['parent_ID'];
-} else {
-  $parent_ID = NULL;
-}
-
-
 $user_ID = 1;
 $poster_ip = $_SERVER["REMOTE_ADDR"];
 $post_date = time();
 $post_subject = NULL;
+$post_email = NULL;
+$post_name = NULL;
 $post_content = NULL;
-$board_ID = 1;
+$board_ID = $_POST['board_ID'];
 $sticky_level = 0;
 $del_pass = "asdf";
 $last_reply_date = time();
@@ -212,7 +225,13 @@ if (isset($_POST['comment'])) {
   $post_content = $_POST['comment'];
 }
 
-
+if (isset($_SESSION['user_level'])) {
+  if ($_SESSION['user_level'] == 3) {
+    if (isset($_POST['sticky_level'])) {
+      $sticky_level = $_POST['sticky_level'];
+    }
+  }
+}
 
 
 echo "1111111";

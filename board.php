@@ -1,34 +1,105 @@
 <?php
 require('config.php');
 session_start();
-$board_ID = 1;
+
+
+if (isset($_REQUEST['board_url'])) {
+    $board_url = $_REQUEST['board_url'];
+} else {
+    echo "No board specified";
+    exit();
+}
+
+if (isset($_REQUEST['page_no'])) {
+    $page_no = $_REQUEST['page_no'];
+} else {
+    $page_no = 0;
+}
+
+//LIMIT jaoks, määrab mitmendast hakatakse kuvama postitusi
+$skip = $page_no * POSTS_PER_PAGE;
+
+// hea või halb otsus? kas kontrollida enne, kas tahvel on olemas, või teha suurem päring kõigile tahvlitele ning
+// siis vaadata kas tahvel on olemas ja
+// pärast saab neid andmeid kasutada tahvlite nimekirja loomisel
+
+try {
+    
+    $stmt = $conn->prepare('SELECT board_ID, board_meta, board_url, board_name
+    FROM boards
+    WHERE board_url = :board_url');
+
+    $stmt->execute(array('board_url' => $board_url));
+     
+    $boards = $stmt -> fetch();
+
+    } catch(PDOException $e) {
+        echo 'ERROR: ' . $e->getMessage();
+    }
+
+$board_ID = $boards['board_ID'];
+
+if ($boards['board_ID'] != True) {
+    echo "No board found";
+    exit();
+}
+
+
 ?>
 
 <!DOCTYPE html>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>board title</title>
+        <title>/<?php  echo $boards['board_url']; ?>/ - <?php  echo $boards['board_name']; ?></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="<?php echo BASE_PATH; ?>css/normalize.css">
 
-        <link rel="stylesheet" href="css/board.css">
+        <link rel="stylesheet" href="<?php echo BASE_PATH; ?>css/board.css">
     </head>
     <body>
         <div id="page-container">
 
         <header id="page-header">
-            <div class="board-list">[ <a href="#">b</a> / <a href="#">v</a> / <a href="#">i</a> / <a href="#">g</a> / <a href="#">gif</a> ]</div>
+        <div class="board-list">[
+        <?php
+
+            try {
+                
+                $stmt = $conn->prepare('SELECT board_url, board_name
+                FROM boards');
+
+                $stmt->execute();
+             
+                $board_list = $stmt->fetchAll();
+                $last_element = end($board_list);
+                if ( count($board_list) ) {
+                    foreach($board_list as $board_list_row) {
+
+                    echo "<a href='". BASE_PATH . $board_list_row['board_url'] ."' title='". $board_list_row['board_name'] ."'>". $board_list_row['board_url'] ."</a>";
+                    if ($last_element != $board_list_row) {
+                        echo " / ";
+                    }
+
+                    }  
+                } else {
+                    //echo "No rows returned.";
+                }
+            } catch(PDOException $e) {
+                echo 'ERROR: ' . $e->getMessage();
+            }
+            ?>
+            ]</div>
             <div id="board-title">
                 <div id="banner"><div style="width:300px;height:100px;background:#d0d0d0;">placeholder</div></div>
-                <h1>/g/ - Technology</h1>
-                <span>meta html</span>
+                <h1>/<?php  echo $boards['board_url']; ?>/ - <?php  echo $boards['board_name']; ?></h1>
+                <span><?php  echo $boards['board_meta']; ?></span>
             </div>
-
             <div id="new-thread">
-                <form action="upload.php" method="post" enctype="multipart/form-data">
+                <form action="<?php echo BASE_PATH; ?>upload.php" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="board_ID" value="<?php echo $board_ID; ?>">
                         <table> 
                             <tr> 
                                 <td class="label-col">Name</td> 
@@ -83,19 +154,36 @@ $board_ID = 1;
 
             <?php 
             try {
-                
+                $ppp = POSTS_PER_PAGE;
                 $stmt = $conn->prepare('SELECT posts.post_ID, users.user_name, premissions.level, posts.poster_ip, posts.post_date, posts.post_content, posts.sticky_level, posts.pic_ID
                 FROM posts
                 LEFT JOIN users ON posts.user_ID = users.user_ID
                 LEFT JOIN premissions ON posts.user_ID = premissions.premission_ID
                 WHERE posts.board_ID =:board_ID AND posts.parent_ID IS NULL
-                ORDER BY posts.sticky_level DESC , posts.last_reply_date DESC');
-
-                $stmt->execute(array('board_ID' => $board_ID));
+                ORDER BY posts.sticky_level DESC , posts.last_reply_date DESC
+                LIMIT :skip,:ppp');
+/*
+                $stmt->execute(array('board_ID' => $board_ID, 'ppp' => POSTS_PER_PAGE));
              
                 $result = $stmt->fetchAll();
-             
-                if ( count($result) ) {
+                //PDO EI LASE LIMITile seada parameetrit mis pole numbrina määratud
+                //Peab kasutama bindParam();  
+*/
+
+    $stmt->bindParam(':board_ID', $board_ID, PDO::PARAM_INT);
+    $stmt->bindParam(':skip', $skip, PDO::PARAM_INT);
+    $stmt->bindParam(':ppp', $ppp, PDO::PARAM_INT);
+
+    $stmt->execute();
+
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+
+
+
+                $row_count = count($result);
+                if ( $row_count ) {
                     foreach($result as $posts_row) {
                 ?>
 
@@ -127,7 +215,7 @@ $board_ID = 1;
 
                         <?php if ($posts_pic_info==True) { ?>
                         <div class="file-info">File: <a href="#"><?php echo $posts_pic_info['pic_newname']; ?></a>-(<?php echo $posts_pic_info['pic_size']; ?> KB, <?php echo $posts_pic_info['file_x']; ?>x<?php echo $posts_pic_info['file_y']; ?>, <?php echo $posts_pic_info['pic_name']; ?>)</div>
-                        <a class="post-image" href="<?php echo "upload/" . $posts_pic_info['pic_newname']; ?>"><img src="<?php echo "upload/" . $posts_pic_info['pic_thumbname']; ?>"></a>
+                        <a class="post-image" href="<?php echo BASE_PATH."upload/" . $posts_pic_info['pic_newname']; ?>"><img src="<?php echo BASE_PATH."upload/" . $posts_pic_info['pic_thumbname']; ?>"></a>
                         <?php } ?>
                         <header class="post-meta">
                             <span class="username"><?php echo $posts_row['user_name']; ?></span> <span class="post-date"><?php echo date('Y/m/d H:i:s', $posts_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $posts_row['post_ID']; ?></a>
@@ -196,7 +284,7 @@ $board_ID = 1;
                                                     <span class="username"><?php echo $reply_row['user_name']; ?></span> <span class="post-date"><?php echo date('Y/m/d H:i:s', $reply_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $reply_row['post_ID']; ?></a>
                                                     <?php if ($reply_pic_info==True) { ?>
                                                     <div class="file-info">File: <a href="#"><?php echo $reply_pic_info['pic_newname']; ?>.jpg</a>-(<?php echo $reply_pic_info['pic_size']; ?> KB, <?php echo $reply_pic_info['file_x']; ?>x<?php echo $reply_pic_info['file_y']; ?>, <?php echo $reply_pic_info['pic_name']; ?>)</div>
-                                                    <a class="post-image" href="<?php echo "upload/" . $reply_pic_info['pic_newname']; ?>"><img src="<?php echo "upload/" . $reply_pic_info['pic_thumbname']; ?>"></a>
+                                                    <a class="post-image" href="<?php echo "../upload/" . $reply_pic_info['pic_newname']; ?>"><img src="<?php echo "../upload/" . $reply_pic_info['pic_thumbname']; ?>"></a>
                                                     <?php } ?>
                                                 </header>
                                                    <div class="post-content">
@@ -217,7 +305,7 @@ $board_ID = 1;
 
                     ?>
 
-
+                    <div style="clear:both;"></div>
                 </div>
                 <?php
                         }  
@@ -234,7 +322,28 @@ $board_ID = 1;
 
 
             <footer>
-                <div class="pagination">[<a href="#">1</a>] [<a href="#">2</a>] [<a href="#">3</a>] [<a href="#">4</a>] [<a href="#">5</a>]</div>
+                <?php 
+                try {
+                    
+                    $stmt = $conn->prepare('SELECT COUNT( * )
+                    FROM posts
+                    WHERE board_ID =:board_ID AND parent_ID IS NULL');
+
+                    $stmt->execute(array('board_ID' => $board_ID));
+                     
+                    $count_posts = $stmt -> fetch();
+
+                    } catch(PDOException $e) {
+                        echo 'ERROR: ' . $e->getMessage();
+                    }
+
+
+                $page_count = ($count_posts['COUNT( * )'] / POSTS_PER_PAGE);
+                for ($i=0; $i < $page_count; $i++) { 
+                    echo "[<a href='". BASE_PATH . $board_url ."/".$i."'>". $i ."</a>] ";
+                }
+                ?>
+
                 <div class="board-list">[ <a href="#">b</a> / <a href="#">v</a> / <a href="#">i</a> / <a href="#">g</a> / <a href="#">gif</a> ]</div>
             </footer>
 
