@@ -122,6 +122,11 @@ a:hover {
 	max-width: 100%;
 }
 
+.subject{
+    color: #8F5C2F;
+    text-shadow: 0 0 5px rgba(57, 46, 11, 0.64);
+}
+
 .username{
     color: #29A329;
     text-shadow: 0 0 5px rgba(2, 139, 0, 0.64);

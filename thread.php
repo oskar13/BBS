@@ -262,7 +262,7 @@ if ($boards['board_url'] != $board_url) {
                                                     <?php echo $reply_row['post_content']; ?>
                                                 </div>
                                                </div>
-                                               <div style="clear:both;"></div>
+                                               
                                         </div>
                     <?php
                             }  

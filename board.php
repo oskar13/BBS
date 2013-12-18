@@ -155,7 +155,7 @@ if ($boards['board_ID'] != True) {
             <?php 
             try {
                 $ppp = POSTS_PER_PAGE;
-                $stmt = $conn->prepare('SELECT posts.post_ID, users.user_name, premissions.level, posts.poster_ip, posts.post_date, posts.post_content, posts.sticky_level, posts.pic_ID
+                $stmt = $conn->prepare('SELECT posts.post_ID, users.user_name, premissions.level, posts.poster_ip, posts.post_date, posts.post_name, posts.post_subject, posts.post_email, posts.post_content, posts.sticky_level, posts.pic_ID
                 FROM posts
                 LEFT JOIN users ON posts.user_ID = users.user_ID
                 LEFT JOIN premissions ON posts.user_ID = premissions.premission_ID
@@ -218,8 +218,27 @@ if ($boards['board_ID'] != True) {
                         <a class="post-image" href="<?php echo BASE_PATH."upload/" . $posts_pic_info['pic_newname']; ?>"><img src="<?php echo BASE_PATH."upload/" . $posts_pic_info['pic_thumbname']; ?>"></a>
                         <?php } ?>
                         <header class="post-meta">
-                            
-                            <span class="username"><?php if ($posts_row['user_name'] ) {  echo $posts_row['user_name']; } else { echo "Anonymous"; }?></span> <span class="post-date"><?php echo date('Y/m/d H:i:s', $posts_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $posts_row['post_ID']; ?></a>  [<a href="<?php echo BASE_PATH . $board_url ."/res/" .$posts_row['post_ID']; ?>">Reply</a>]</span>
+                            <?php
+                                if ($posts_row['post_subject']) {
+                                    echo "<span class='subject'>";
+                                    echo $posts_row['post_subject'];
+                                    echo "</span>";
+                                }
+                            ?>
+                            <span class="username">
+                            <?php
+                                if ($posts_row['post_name']) {
+                                    echo $posts_row['post_name'];
+                                } else {
+                                    if ($posts_row['user_name'] ) {
+                                        echo $posts_row['user_name'];
+                                    } else {
+                                        echo "Anonymous";
+                                    }
+                                }
+                            ?> 
+                            </span>
+                            <span class="post-date"><?php echo date('Y/m/d H:i:s', $posts_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $posts_row['post_ID']; ?></a>  [<a href="<?php echo BASE_PATH . $board_url ."/res/" .$posts_row['post_ID']; ?>">Reply</a>]</span>
                         </header>
                         <div class="post-content">
 
@@ -238,9 +257,8 @@ if ($boards['board_ID'] != True) {
                     $parent_ID=$posts_row['post_ID'];
 
                     try {
-                        
-                        $stmt = $conn->prepare('SELECT p.post_ID, users.user_name, p.poster_ip, p.post_date, p.post_content, p.pic_ID
-                        FROM (SELECT post_ID, user_ID ,poster_ip, post_date, post_content, pic_ID, parent_ID
+                        $stmt = $conn->prepare('SELECT p.post_ID, users.user_name, p.poster_ip, p.post_date, p.post_name, p.post_subject, p.post_email, p.post_content, p.pic_ID
+                        FROM (SELECT post_ID, user_ID ,poster_ip, post_date, post_name, post_subject, post_email, post_content, pic_ID, parent_ID
                             FROM posts
                             WHERE parent_ID=:parent_ID
                             ORDER BY post_ID DESC LIMIT 3) p
@@ -250,7 +268,6 @@ if ($boards['board_ID'] != True) {
                         $stmt->execute(array('parent_ID' => $parent_ID));
                      
                         $result2 = $stmt->fetchAll();
-                     
                         if ( count($result2) ) {
                             foreach($result2 as $reply_row) {
                     ?>
@@ -275,6 +292,8 @@ if ($boards['board_ID'] != True) {
                         } catch(PDOException $e) {
                             echo 'ERROR: ' . $e->getMessage();
                         }
+
+
                     ?>
 
 
@@ -282,7 +301,27 @@ if ($boards['board_ID'] != True) {
                                             <div class="reply-arrows">>></div>
                                             <div class="post-reply">
                                                 <header class="post-meta">
-                                                    <span class="username"><?php if ($reply_row['user_name'] ) {  echo $reply_row['user_name']; } else { echo "Anonymous"; }?></span> <span class="post-date"><?php echo date('Y/m/d H:i:s', $reply_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $reply_row['post_ID']; ?></a>
+                                                    <?php
+                                                        if ($reply_row['post_subject']) {
+                                                            echo "<span class='subject'>";
+                                                            echo $reply_row['post_subject'];
+                                                            echo "</span>";
+                                                        }
+                                                    ?>
+                                                    <span class="username">
+                                                    <?php
+                                                        if ($reply_row['post_name']) {
+                                                            echo $reply_row['post_name'];
+                                                        } else {
+                                                            if ($reply_row['user_name'] ) {
+                                                                echo $reply_row['user_name'];
+                                                            } else {
+                                                                echo "Anonymous";
+                                                            }
+                                                        }
+                                                    ?> 
+                                                    </span>
+                                                    <span class="post-date"><?php echo date('Y/m/d H:i:s', $reply_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $reply_row['post_ID']; ?></a>
                                                     <?php if ($reply_pic_info==True) { ?>
                                                     <div class="file-info">File: <a href="#"><?php echo $reply_pic_info['pic_newname']; ?>.jpg</a>-(<?php echo $reply_pic_info['pic_size']; ?> KB, <?php echo $reply_pic_info['file_x']; ?>x<?php echo $reply_pic_info['file_y']; ?>, <?php echo $reply_pic_info['pic_name']; ?>)</div>
                                                     <a class="post-image" href="<?php echo BASE_PATH."upload/" . $reply_pic_info['pic_newname']; ?>"><img src="<?php echo BASE_PATH."upload/" . $reply_pic_info['pic_thumbname']; ?>"></a>
@@ -292,13 +331,15 @@ if ($boards['board_ID'] != True) {
                                                     <?php echo $reply_row['post_content']; ?>
                                                 </div>
                                                </div>
-                                               <div style="clear:both;"></div>
+                                               
                                         </div>
                     <?php
                             }  
                         } else {
                             //echo "No rows returned.";
                         }
+
+
                     } catch(PDOException $e) {
                         echo 'ERROR: ' . $e->getMessage();
                     }

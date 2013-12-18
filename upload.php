@@ -268,25 +268,29 @@ $del_pass = "asdf";
 
 
 if (isset($_POST['name'])) {
-  $post_name = $_POST['name'];
+  $post_name = htmlspecialchars($_POST['name']);
 }
 
 if (isset($_POST['email'])) {
-  $post_email = $_POST['email'];
+  $post_email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
 }
 
 if (isset($_POST['subject'])) {
-  $post_subject = $_POST['subject'];
+  $post_subject = htmlspecialchars($_POST['subject']);
 }
 
 if (isset($_POST['comment'])) {
-  $post_content = $_POST['comment'];
+  $post_content = (nl2br(htmlspecialchars($_POST['comment'])));
 }
 
 if (isset($_SESSION['user_level'])) {
   if ($_SESSION['user_level'] == 3) {
     if (isset($_POST['sticky_level'])) {
-      $sticky_level = $_POST['sticky_level'];
+      if(preg_match('/^\d+$/',$_GET['id'])) {
+        $sticky_level = $_POST['sticky_level'];
+      } else {
+        echo "<br>Invalid input for sticky level!";
+      }
     }
   }
 }
