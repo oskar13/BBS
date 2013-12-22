@@ -138,7 +138,7 @@ if ($boards['board_ID'] != True) {
                 $stmt->execute();
                  
 
-                $glob_msg = $stmt -> fetch();
+                $glob_msg = $stmt -> fetch(PDO::FETCH_ASSOC);
 
 
                 } catch(PDOException $e) {
@@ -225,6 +225,11 @@ if ($boards['board_ID'] != True) {
                                     echo "</span>";
                                 }
                             ?>
+                            <?php
+                                if ($posts_row['post_email'] ) {
+                                    echo "<a href='mailto:".$posts_row['post_email']."'>";
+                                }
+                            ?>
                             <span class="username">
                             <?php
                                 if ($posts_row['post_name']) {
@@ -237,6 +242,11 @@ if ($boards['board_ID'] != True) {
                                     }
                                 }
                             ?> 
+                            <?php
+                                if ($posts_row['post_email'] ) {
+                                    echo "</a>";
+                                }
+                            ?>
                             </span>
                             <span class="post-date"><?php echo date('Y/m/d H:i:s', $posts_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $posts_row['post_ID']; ?></a>  [<a href="<?php echo BASE_PATH . $board_url ."/res/" .$posts_row['post_ID']; ?>">Reply</a>]</span>
                         </header>
@@ -261,7 +271,7 @@ if ($boards['board_ID'] != True) {
                         FROM (SELECT post_ID, user_ID ,poster_ip, post_date, post_name, post_subject, post_email, post_content, pic_ID, parent_ID
                             FROM posts
                             WHERE parent_ID=:parent_ID
-                            ORDER BY post_ID DESC LIMIT 3) p
+                            ORDER BY post_ID DESC LIMIT 5) p
                         LEFT JOIN users ON p.user_ID=users.user_ID
                         ORDER BY p.post_ID');
 

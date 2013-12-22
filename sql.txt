@@ -61,7 +61,7 @@ CREATE TABLE users (
 	user_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	user_name VARCHAR(50),
 	user_pass VARCHAR(250),
-	premission_ID INT DEFAULT 0,
+	admin_level INT DEFAULT 0,
 	banned INT DEFAULT 0,
 	ban_reason TEXT
 );

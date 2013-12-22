@@ -6,7 +6,7 @@ define('PASS', '');
 define('DBNAME', '4chan');
 
 define('BASE_PATH', '/bbs/');
-define('POSTS_PER_PAGE', 2);
+define('POSTS_PER_PAGE', 10);
 /*
 $connection=new mysqli(HOST, USER, PASS, DBNAME);
 
