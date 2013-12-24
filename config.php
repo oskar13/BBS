@@ -22,5 +22,5 @@ if ($connection2->connect_errno) {
     . $connection2->connect_errno . ") " . $connection2->connect_error;
 }
 */
-$conn = new PDO('mysql:host=localhost;dbname=4chan;charset=utf8', USER, PASS);
+$conn = new PDO('mysql:host=127.0.0.1;dbname=4chan;charset=utf8', USER, PASS);
 date_default_timezone_set('Europe/Tallinn');
