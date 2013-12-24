@@ -29,9 +29,12 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
     if ($user_data['user_ID'] == True) {
     	$_SESSION['user_ID'] = $user_data['user_ID'];
     	$_SESSION['user_name'] = $user_data['user_name'];
-    	$_SESSION['user_pass'] = $user_data['user_pass'];
+    	/*$_SESSION['user_pass'] = $user_data['user_pass'];*/
     	$_SESSION['admin_level'] = $user_data['admin_level'];
     	$_SESSION['banned'] = $user_data['banned'];
+
+    	header("Location: admin.php");
+    	exit();
     } else {
     	$login_error = 1;
     }
@@ -84,6 +87,9 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 		?>
 			<p>Welcome <?php echo $_SESSION['user_name']; ?>. <a href="?logout=1">Logout?</a></p>
 		<?php
+		echo "<pre>";
+		echo var_dump($_SESSION);
+		echo "</pre>";
 			if ($_SESSION['banned'] > 0) {
 				echo "<big style='color:red'>Seems like you are banned!</big>";
 				echo "<br>Reason:";

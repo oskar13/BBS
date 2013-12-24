@@ -253,7 +253,7 @@ if (isset($_POST['parent_ID'])) {
 
 
 
-$user_ID = 1;
+$user_ID = NULL;
 $poster_ip = $_SERVER["REMOTE_ADDR"];
 $post_date = time();
 $post_subject = NULL;
@@ -265,7 +265,9 @@ $sticky_level = 0;
 $del_pass = "asdf";
 
 
-
+if (isset($_SESSION['user_ID'])) {
+  $user_ID = $_SESSION['user_ID'];
+}
 
 if (isset($_POST['name'])) {
   $post_name = htmlspecialchars($_POST['name']);

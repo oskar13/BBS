@@ -1,5 +1,6 @@
 <?php
 require('config.php');
+session_set_cookie_params(1200, '/bbs');
 session_start();
 
 
@@ -63,7 +64,7 @@ if ($boards['board_ID'] != True) {
         <div id="page-container">
 
         <header id="page-header">
-        <div class="board-list">[
+        <span class="board-list">[
         <?php
 
             try {
@@ -91,7 +92,18 @@ if ($boards['board_ID'] != True) {
                 echo 'ERROR: ' . $e->getMessage();
             }
             ?>
-            ]</div>
+            ]</span>
+            <?php
+            if(isset($_SESSION['user_ID'])) {
+                echo "<span id='user-meta'>";
+                echo "Sup ".$_SESSION['user_name'];
+                if ($_SESSION['admin_level'] > 0) {
+                    echo " - <a href='". BASE_PATH ."admin.php'>Admin</a>";
+                }
+                echo " - <a href='". BASE_PATH ."login.php?logout=1'>Logout</a>";
+                echo "</span>";
+            }
+            ?>
             <div id="board-title">
                 <div id="banner"><div style="width:300px;height:100px;background:#d0d0d0;">placeholder</div></div>
                 <h1>/<?php  echo $boards['board_url']; ?>/ - <?php  echo $boards['board_name']; ?></h1>
@@ -214,7 +226,7 @@ if ($boards['board_ID'] != True) {
                     <div class="post-parent">
 
                         <?php if ($posts_pic_info==True) { ?>
-                        <div class="file-info">File: <a href="#"><?php echo $posts_pic_info['pic_newname']; ?></a>-(<?php echo $posts_pic_info['pic_size']; ?> KB, <?php echo $posts_pic_info['file_x']; ?>x<?php echo $posts_pic_info['file_y']; ?>, <?php echo $posts_pic_info['pic_name']; ?>)</div>
+                        <div class="file-info">File: <a href="<?php echo BASE_PATH."upload/" . $posts_pic_info['pic_newname']; ?>"><?php echo $posts_pic_info['pic_newname']; ?></a>-(<?php echo $posts_pic_info['pic_size']; ?> KB, <?php echo $posts_pic_info['file_x']; ?>x<?php echo $posts_pic_info['file_y']; ?>, <?php echo $posts_pic_info['pic_name']; ?>)</div>
                         <a class="post-image" href="<?php echo BASE_PATH."upload/" . $posts_pic_info['pic_newname']; ?>"><img src="<?php echo BASE_PATH."upload/" . $posts_pic_info['pic_thumbname']; ?>"></a>
                         <?php } ?>
                         <header class="post-meta">
@@ -399,7 +411,7 @@ if ($boards['board_ID'] != True) {
             </div>
 
                 
-                 <div class="board-list">[
+                 <span class="board-list">[
                 <?php
                     if ( count($board_list) ) {
                         foreach($board_list as $board_list_row) {
@@ -414,7 +426,7 @@ if ($boards['board_ID'] != True) {
                         //echo "No rows returned.";
                     }
                 ?>
-                ]</div>
+                ]</span>
 
             </footer>
 

@@ -83,3 +83,11 @@ CREATE TABLE global_message (
 	message_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	message TEXT
 );
+
+CREATE TABLE banned (
+	ban_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	poster_ip VARCHAR(30),
+	reason VARCHAR(70),
+	ban_end INT,
+	ban_begin INT
+);
