@@ -91,3 +91,11 @@ CREATE TABLE banned (
 	ban_end INT,
 	ban_begin INT
 );
+
+CREATE TABLE site_options (
+	site_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	site_name VARCHAR(70),
+	show_desc INT DEFAULT NULL,
+	site_desc_title VARCHAR(100),
+	site_desc TEXT
+);

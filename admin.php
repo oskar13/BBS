@@ -25,7 +25,7 @@ if(!isset($_SESSION['user_ID'])) {
         <div id="page-container">
             <nav id="nav">
                 <ul>
-                    <li><a href="admin.php">Admin Home</a></li><li><a href="?page=new_article">New Article</a></li><li><a href="?page=boards">Boards</a></li><li><a href="?page=bans">List of Bans</a></li><li><a href="?page=users">Manage Users</a></li>
+                    <li><a href="admin.php">Admin Home</a></li><li><a href="?page=new_article">New Article</a></li><li><a href="?page=boards">Boards</a></li><li><a href="?page=bans">List of Bans</a></li><li><a href="?page=users">Manage Users</a></li><li><a href="?page=site_settings">Site settings</a></li>
                 </ul>
             </nav>
 
@@ -33,6 +33,21 @@ if(!isset($_SESSION['user_ID'])) {
             <?php
             if (isset($_REQUEST['page'])) {
 
+                if ($_REQUEST['page'] == "new_article") {
+                    ?>
+                    <form action="?" method="post">
+                        <dl>
+                            <dt><label for="heading">Title</label></dt>
+                            <dd><input class="input-text" type="text" name="heading" /></dd>
+                            <br />
+                            <dt><label for="content">Post content</label></dt>
+                            <dd><textarea class="input-text" rows="8" cols="60" name="content"></textarea></dd>
+                        <dl>
+                        <input style="margin-top: 1em;" type="submit" value="Publish">
+                    </form>
+                    <?php
+                }
+                /////////////////////////////////////////
                 if ($_REQUEST['page'] == "boards") {
                     
                      try {
@@ -176,6 +191,48 @@ if(!isset($_SESSION['user_ID'])) {
                     } catch(PDOException $e) {
                         echo 'ERROR: ' . $e->getMessage();
                     }
+                }
+                /////////////////////////////////////////
+                if ($_REQUEST['page'] == "site_settings") {
+
+                    try {
+                        $stmt = $conn->prepare("SELECT site_name, show_desc ,site_desc_title, site_desc 
+                        FROM site_options WHERE site_ID = 1");
+
+                        $stmt->execute();
+                         
+
+                        $site_settings = $stmt -> fetch(PDO::FETCH_ASSOC);
+
+
+                        } catch(PDOException $e) {
+                            echo 'ERROR: ' . $e->getMessage();
+                        }
+
+                    ?>
+                    <form action="?" method="post">
+
+                        <dl>
+                            <dt><label for="site_title">Site title</label></dt>
+                            <dd><input class="input-text" type="text" name="site_title" value="<?php echo $site_settings['site_name']; ?>" /></dd>
+                        </dl>
+                        <fieldset>
+                        <legend> Site info </legend>
+                            <dl>
+                                <label for="show">Show info on the first page</label>
+                                <input type="checkbox" name="show" value="1" <?php if ($site_settings['show_desc']) {  echo "checked='checked'";  }  ?> />
+                                <br />
+                                <br />
+                                <dt><label for="site_desc_title">Site Description title</label></dt>
+                                <dd><input class="input-text" type="text" name="site_desc_title" value="<?php echo $site_settings['site_desc_title']; ?>" ></dd>
+                                <br />
+                                <dt><label for="site_desc">Site Descritpion</label></dt>
+                                <dd><textarea class="input-text" rows="4" cols="50" name="site_desc"><?php echo $site_settings['site_desc']; ?></textarea></dd>
+                            <dl>
+                        </fieldset>
+                        <input type="submit" value="Update">
+                    </form>
+                    <?php
                 }
                 /////////////////////////////////////////
             }
