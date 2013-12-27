@@ -16,14 +16,13 @@ if (isset($_REQUEST['board_url'])) {
 } 
 
 try {
-    
     $stmt = $conn->prepare('SELECT board_ID, board_meta, board_url, board_name
     FROM boards
     WHERE board_ID = (SELECT board_ID FROM posts WHERE post_ID = :post_ID)');
     $stmt->execute(array('post_ID' => $post_ID));
      
     $boards = $stmt -> fetch();
-
+    
     } catch(PDOException $e) {
         echo 'ERROR: ' . $e->getMessage();
     }
@@ -93,7 +92,7 @@ if ($boards['board_url'] != $board_url) {
             <div id="new-thread">
                 <form action="<?php echo BASE_PATH; ?>upload.php" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="parent_ID" value="<?php echo $post_ID; ?>">
-                    <input type="hidden" name="board_ID" value="<?php echo $board_ID; ?>">
+                    <input type="hidden" name="board_ID" value="<?php echo $boards['board_ID']; ?>">
                         <table> 
                             <tr> 
                                 <td class="label-col">Name</td> 

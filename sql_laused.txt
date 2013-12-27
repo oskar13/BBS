@@ -93,3 +93,14 @@ ORDER BY p.post_ID;
 
 INSERT INTO pictures (pic_newname ,pic_size ,pic_name ,file_x ,file_y)
 VALUES ('upload/123.jpg', 'thumb/123.jpg', '666', '123.jpg', '111', '222');
+
+
+
+#Lae viimaste postituste pildid esilehel
+SELECT p.post_ID, pictures.pic_thumbname, p.parent_ID, boards.board_url
+FROM posts p
+LEFT JOIN pictures ON p.pic_ID=pictures.pic_ID
+LEFT JOIN boards ON p.board_ID=boards.board_ID
+WHERE pictures.pic_thumbname IS NOT NULL
+ORDER BY p.post_ID DESC
+LIMIT 0,3
