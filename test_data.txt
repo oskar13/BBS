@@ -1,4 +1,4 @@
-INSERT INTO `asdf`.`site_options` (
+INSERT INTO `site_options` (
 `site_ID` ,
 `site_name` ,
 `show_desc` ,
