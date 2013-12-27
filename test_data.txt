@@ -1,0 +1,23 @@
+INSERT INTO `asdf`.`site_options` (
+`site_ID` ,
+`site_name` ,
+`show_desc` ,
+`site_desc_title` ,
+`site_desc`
+)
+VALUES (
+NULL , 'x chan', '1', 'What is x chan?', 'Lorem Ipsum'
+);
+
+
+INSERT INTO `boards` (
+`board_ID` ,
+`board_meta` ,
+`board_url` ,
+`board_name`
+)
+VALUES (
+NULL , 'This is board meta', 'g', 'Technology'
+), (
+NULL , 'Meta random', 'b', 'Random'
+);

@@ -55,12 +55,42 @@ try {
         <div class="blue-box">
             <h2>List of boards</h2>
             <div class="blue-box-inner">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            <?php
+                try {
+                    
+                    $stmt = $conn->prepare('SELECT board_url, board_name
+                    FROM boards');
+
+                    $stmt->execute();
+                 
+                    $board_list = $stmt->fetchAll();
+
+                    if ( count($board_list) ) {
+                        ?>
+                        <table>
+                        <tr><th>Board Name</th><th></th><th></th></tr>
+                        <?php
+                        $odd_even = 0;
+                        foreach($board_list as $board_list_row) {
+                            echo "<tr class='";
+                            if (0 == $odd_even % 2) {
+                                echo "even";
+                            }
+                            else {
+                                echo "odd";
+                            }
+                            $odd_even++;
+                            echo "'><td><a href='". BASE_PATH . $board_list_row['board_url'] ."' title='". $board_list_row['board_name'] ."'>". $board_list_row['board_name'] ."</a></td><td><a href='" . BASE_PATH . $board_list_row['board_url'] . "'>/". $board_list_row['board_url'] ."/</a></td></tr>";
+
+                        }
+                        echo "</table>";
+                    } else {
+                        echo "No boards found";
+                    }
+                } catch(PDOException $e) {
+                    echo 'ERROR: ' . $e->getMessage();
+                }
+                ?>
             </div>
         </div>
         
