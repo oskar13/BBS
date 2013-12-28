@@ -21,3 +21,8 @@ NULL , 'This is board meta', 'g', 'Technology'
 ), (
 NULL , 'Meta random', 'b', 'Random'
 );
+
+
+INSERT INTO `users` (`user_ID`, `user_name`, `user_pass`, `admin_level`, `banned`, `ban_reason`) VALUES
+(1, 'Anon', NULL, 0, 0, NULL),
+(2, 'juku', '*C25867096CC67DD77ACB514CE80CC1B06A9438BF', 9001, 1, 'asdf');
