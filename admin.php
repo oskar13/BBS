@@ -32,10 +32,10 @@ if(!isset($_SESSION['user_ID'])) {
 
             <?php
             if (isset($_REQUEST['page'])) {
-
+                /////////////////////////////////////////
                 if ($_REQUEST['page'] == "new_article") {
                     ?>
-                    <form action="?" method="post">
+                    <form action="admin_post.php" method="post">
                         <dl>
                             <dt><label for="heading">Title</label></dt>
                             <dd><input class="input-text" type="text" name="heading" /></dd>

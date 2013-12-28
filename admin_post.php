@@ -9,6 +9,27 @@ if(!isset($_SESSION['user_ID'])) {
 }
 
 ////////////////////////////////////////////////////////////
+//////////             NEW ARTICLE           ///////////////
+////////////////////////////////////////////////////////////
+
+// Lisasin näidise kuidas kasutada uut PDO objekti
+// Asenda "SELECT :asdf FROM articles" oma päringuga
+// :asdf on muutuja mis tuleb all siduda päris muutujuga $stmt->execute(array('asdf' => $variable));
+
+if (isset($_POST['new_article'])) {
+	$variable = htmlspecialchars($_POST['variable']);
+
+    try {
+        $stmt = $conn->prepare("SELECT :asdf FROM articles");
+        $stmt->execute(array('asdf' => $variable));
+    } catch(PDOException $e) {
+        echo 'ERROR: ' . $e->getMessage();
+        die();
+    }
+    header('Location: admin.php?page=new_article');
+}
+
+////////////////////////////////////////////////////////////
 //////////        SITE SETTINGS UPDATE       ///////////////
 ////////////////////////////////////////////////////////////
 if (isset($_POST['site_title'])) {
