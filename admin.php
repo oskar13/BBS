@@ -210,7 +210,7 @@ if(!isset($_SESSION['user_ID'])) {
                         }
 
                     ?>
-                    <form action="?" method="post">
+                    <form action="admin_post.php" method="post">
 
                         <dl>
                             <dt><label for="site_title">Site title</label></dt>
