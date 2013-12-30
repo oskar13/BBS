@@ -8,13 +8,13 @@ Admin ja mod saavad kasutajaid IP või kasutajanime järgi bännida juhul kui ka
 
 
 #### Tähtsamad failid ja nende kirjeldused:
-* **index.php** - avaleht kus on nimekiri lehtedest
+* **index.php** - avaleht kus on nimekiri lehtedest ja viimased postitused
 * **board.php** - sisaldab endas koodi mis laeb postitused ja teadetetahvli kirjelduse.
-* **post.php** - kuvab üksikut postitust koos kommentaaridega.
+* **thread.php** - kuvab üksikut postitust koos kommentaaridega.
 * **upload.php** - piltide üles laadimine ja pisipildi genereerimine.
-* **admin.php** - administreermiseks vajalikud funktsioonid, sellele failile suunatakse kõik admin päringud mis on seotud teadetetahvlitega.
+* **admin.php** - administreermiseks vajalikud funktsioonid.
+* **admin_post.php** - Võtab vastu kõik sisestus päringud admin.php lehelt
 * **news.php** - kuvab üldiseid uudiseid mis on seotud lehega. Kasutajatel on võimalus kommenteerida uudiseid.
-* **news-admin.php** - uudiste sisestamine ja uuendamine.
 * **normalize.css** - nullib ära võimalikud lehitsejate vahelised erinevused
 * **style.css** - üldised CSS stiilid mida jagab enamus lehti
 * **board.css** - CSS fail mis määrab stiili tahvlitele
@@ -28,15 +28,13 @@ Admin ja mod saavad kasutajaid IP või kasutajanime järgi bännida juhul kui ka
 - [x] README
 - [x] algne andmebaasi skeem
 - [ ] leida viis kuidas mugavalt kuvada postitusi mis on omavahel seotud.
-- [ ] piltide üles laadimise skript 
+- [x] piltide üles laadimise skript 
 
 #### Teadaolevad vead
 - Sesiooni kaaperdamine teiselt saidilt mis asub samas serveris
-- Kautaja sisestatud andmete puhastamine puudub
 
 
 #### Ettepanekud
-- HTML ja CSS loomisel võiks kasutada Twitter Bootstrapi
 - tahvlid võiksid olla kategoriseeritud, võimak koostada selle järgi navigatsioon esilehele
 - kasutusel erilised koodid millega viidatakse postitusele mida vastatakse, näide ">>123456". Käitub lingina mis viib sind post.php lehele kus vastav kommentaar/postitus on teise värviga määratud.
 - url-id tuleb saada normaalsemaks, sammuti serverile saata andmed elegantsemalt ja hoida aadressi ribad puhtamad (.htaccess)
