@@ -136,7 +136,29 @@ try {
             <h2>Latest Posts</h2>
             <div class="blue-box-inner">
                 <ul>
-
+<?php
+try {
+    $stmt = $conn->prepare('SELECT p.post_ID ,boards.board_url, boards.board_name , SUBSTRING(p.post_content, 1, 100)
+    FROM posts p
+    LEFT JOIN boards ON p.board_ID=boards.board_ID
+    WHERE post_content != ""
+    ORDER BY post_ID DESC
+    LIMIT 0,10');
+    $stmt->execute();
+    $recent_posts = $stmt->fetchAll();
+    if ( count($recent_posts) ) {
+        foreach($recent_posts as $recent_posts_row) {
+            echo "<li>";
+            echo $recent_posts_row['board_name'] .": <a href='". $recent_posts_row['board_url'] . "/res/" . $recent_posts_row['post_ID'] ."'>". $recent_posts_row['SUBSTRING(p.post_content, 1, 100)'] . "</a>";
+            echo "</li>";
+        }
+    } else {
+        //echo "No rows returned.";
+    }
+} catch(PDOException $e) {
+    echo 'ERROR: ' . $e->getMessage();
+}
+?>
                 </ul>
             </div>
         </div>

@@ -104,3 +104,12 @@ LEFT JOIN boards ON p.board_ID=boards.board_ID
 WHERE pictures.pic_thumbname IS NOT NULL
 ORDER BY p.post_ID DESC
 LIMIT 0,3
+
+
+#Uusimad postitused, tekst piiratud kuni 100 tähemärgini.
+SELECT p.post_ID ,boards.board_url, boards.board_name , SUBSTRING(p.post_content, 1, 100)
+FROM posts p
+LEFT JOIN boards ON p.board_ID=boards.board_ID
+WHERE post_content != ""
+ORDER BY post_ID DESC
+LIMIT 0,10
