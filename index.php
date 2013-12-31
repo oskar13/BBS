@@ -22,7 +22,7 @@ try {
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>board title</title>
+        <title><?php echo $site_settings['site_name']; ?></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -96,7 +96,7 @@ try {
         
         <div class="half blue-box">
             <h2>Latest Images</h2>
-            <div class="blue-box-inner">
+            <div class="blue-box-inner" id="latest-images">
                 <ul>
 <?php
 try {
@@ -134,7 +134,7 @@ try {
 
         <div class="half-last blue-box">
             <h2>Latest Posts</h2>
-            <div class="blue-box-inner">
+            <div class="blue-box-inner" id="latest-posts">
                 <ul>
 <?php
 try {

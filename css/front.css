@@ -45,6 +45,31 @@ a:hover {
     float: left;
 }
 
+#latest-images ul {
+    margin: 0;
+    padding: 0;
+}
+
+#latest-images li {
+    background: none repeat scroll 0 0 rgba(14, 28, 28, 0.29);
+    border: 1px solid #082936;
+    list-style: none outside none;
+    margin-bottom: 0.4em;
+}
+
+#latest-images img{
+	display: block;
+	margin: 0 auto;
+}
+
+#latest-posts li {
+    list-style: none outside none;
+}
+
+#latest-posts li a{
+    text-decoration: underline;
+}
+
 .half-last {
 	width: 48%;
 	float: left;
