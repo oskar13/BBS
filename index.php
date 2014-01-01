@@ -68,20 +68,27 @@ try {
                     if ( count($board_list) ) {
                         ?>
                         <table>
-                        <tr><th>Board Name</th><th></th><th></th></tr>
                         <?php
-                        $odd_even = 0;
+                        $row_c = 0;
+                        $row_c_c = 0;
+                        $last_element = end($board_list);
                         foreach($board_list as $board_list_row) {
-                            echo "<tr class='";
-                            if (0 == $odd_even % 2) {
-                                echo "even";
+                            if (0 == $row_c % 3) {
+                                echo "<tr>";
+                                $row_c_c = 0;
                             }
-                            else {
-                                echo "odd";
-                            }
-                            $odd_even++;
-                            echo "'><td><a href='". BASE_PATH . $board_list_row['board_url'] ."' title='". $board_list_row['board_name'] ."'>". $board_list_row['board_name'] ."</a></td><td><a href='" . BASE_PATH . $board_list_row['board_url'] . "'>/". $board_list_row['board_url'] ."/</a></td></tr>";
 
+
+
+                            
+                            echo "<td><a href='". BASE_PATH . $board_list_row['board_url'] ."' title='". $board_list_row['board_name'] ."'>". $board_list_row['board_name'] ."</a> - <a href='" . BASE_PATH . $board_list_row['board_url'] . "'>/". $board_list_row['board_url'] ."/</a></td>";
+                            $row_c++;
+                            if (((0 == $row_c % 3)&&($row_c_c == 1)) || ($last_element == $board_list_row) ) {
+                                echo "</tr>";
+                            } else {
+                                $row_c_c = 1;
+                            }
+                            
                         }
                         echo "</table>";
                     } else {
@@ -168,7 +175,7 @@ try {
 
 
 
-        <footer id="page-footer">© Copyright 2013, Site Title</footer>
+        <footer id="page-footer">© Copyright <?php echo date('Y'); ?>, <?php echo $site_settings['site_name']; ?></footer>
         </div>
 
 
