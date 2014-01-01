@@ -119,7 +119,7 @@ if ($boards['board_ID'] != True) {
                             </tr>
                             <tr> 
                                 <td class="label-col">Email</td> 
-                                <td><input class="new-input" type="text" name="email"></td> 
+                                <td><input class="new-input" type="email" name="email"></td> 
                             </tr> 
                             <tr> 
                                 <td class="label-col">Subject</td> 

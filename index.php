@@ -1,6 +1,5 @@
 <?php
 require('config.php');
-session_set_cookie_params(1200, '/bbs');
 session_start();
 
 

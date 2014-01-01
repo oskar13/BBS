@@ -1,6 +1,6 @@
 <?php
 require('config.php');
-session_set_cookie_params(1200, '/bbs');
+session_set_cookie_params(1200, BASE_PATH);
 session_start();
 
 if(!isset($_SESSION['user_ID'])) {
@@ -170,7 +170,7 @@ if(!isset($_SESSION['user_ID'])) {
 
 
                                     if ($warnings) { 
-                                        echo "<a href='#'>" . $warnings['COUNT( * )'] . "</a>";
+                                        echo "<a href='?page=users&user_ID=". $user_list_row['user_ID'] ."&edit_warning=1'>" . $warnings['COUNT( * )'] . "</a>";
                                     } else {
                                         echo "0";
                                     }
@@ -181,10 +181,109 @@ if(!isset($_SESSION['user_ID'])) {
                                 if ($user_list_row['banned'] > 0) {
                                     echo "<span style='color:red'>banned</span>";
                                 }
-                                echo "</td><td><a href='#'>edit</a></td></tr>";
+                                echo "</td><td><a href='?page=users&user_ID=". $user_list_row['user_ID'] ."'>edit</a></td></tr>";
 
                             } 
                             echo "</table>";
+
+                            if (isset($_REQUEST['user_ID'])) {
+                                try {
+                
+                                    $stmt = $conn->prepare('SELECT user_ID, user_name, admin_level, banned, ban_reason
+                                    FROM users
+                                    WHERE user_ID = :user_ID');
+
+                                    $stmt->execute(array('user_ID' => $_REQUEST['user_ID'] ));
+
+                                    $user = $stmt -> fetch(PDO::FETCH_ASSOC);
+
+                                } catch(PDOException $e) {
+                                    echo 'ERROR: ' . $e->getMessage();
+                                }
+
+                                if ($user['user_ID']) {
+                                    if (!isset($_REQUEST['edit_warning'])) {
+                                        ?>
+                                        <form action="admin_post.php" method="post">
+                                            <input type="hidden" name="data" value="edit_user" />
+                                            <input type="hidden" name="user_ID" value="<?php echo $user['user_ID']; ?>" />
+                                            <dl>
+                                                <dt><label for="user_name">User Name</label></dt>
+                                                <dd><input class="input-text" type="text" name="user_name" value="<?php echo $user['user_name']; ?>" /></dd>
+                                                <dt><label for="admin_level">User Level</label></dt>
+                                                <dd><input class="input-text" type="text" name="admin_level" value="<?php echo $user['admin_level']; ?>" /></dd>
+                                            </dl>
+                                            <fieldset>
+                                            <legend> Ban user </legend>
+                                                <dl>
+                                                    <label for="banned">Banned</label>
+                                                    <input type="checkbox" name="banned" value="1" <?php if ($user['banned']) {  echo "checked='checked'";  }  ?> />
+                                                    <br />
+                                                    <br />
+                                                    <dt><label for="ban_reason">Reason</label></dt>
+                                                    <dd><textarea class="input-text" rows="4" cols="50" name="ban_reason"><?php echo $user['ban_reason']; ?></textarea></dd>
+                                                <dl>
+                                            </fieldset>
+                                            <input type="submit" value="Update">
+                                        </form>
+
+
+                                        <form action="admin_post.php" method="post">
+                                            <input type="hidden" name="data" value="add_warning" />
+                                            <input type="hidden" name="user_ID" value="<?php echo $user['user_ID']; ?>" />
+                                            <fieldset>
+                                            <legend> Add a warning </legend>
+                                                <dl>
+                                                    <dt><label for="comment">Comment</label></dt>
+                                                    <dd><textarea class="input-text" rows="4" cols="50" name="comment"></textarea></dd>
+                                                <dl>
+                                            </fieldset>
+                                            <input type="submit" value="Submit">
+                                        </form>
+                                        <?php
+                                    } else {
+                                        try {
+                                            
+                                            $stmt = $conn->prepare('SELECT warning_ID, comment
+                                            FROM warnings
+                                            WHERE user_ID = :user_ID');
+                                            $stmt->execute(array('user_ID' => $user['user_ID']));
+                                         
+                                            $warnings = $stmt->fetchAll();
+                                         
+                                            if ( count($warnings) ) {
+                                                echo "<h2>Warnings for user: ". $user['user_name'] ."</h2>";
+                                                foreach($warnings as $warnings_row) {
+                                                    ?>
+                                                    <form action="admin_post.php" method="post">
+                                                        <input type="hidden" name="data" value="edit_warning" />
+                                                        <input type="hidden" name="warning_ID" value="<?php echo $warnings_row['warnings_ID']; ?>" />
+                                                        <input type="hidden" name="user_ID" value="<?php echo $user['user_ID']; ?>" />
+                                                        <fieldset>
+                                                        <legend> Warning ID: <?php echo $warnings_row['warning_ID']; ?> </legend>
+                                                            <dl>
+                                                                <dt><label for="comment">Comment</label></dt>
+                                                                <dd><textarea class="input-text" rows="4" cols="50" name="comment"><?php echo $warnings_row['comment']; ?></textarea></dd>
+                                                            <dl>
+                                                            <br>
+                                                            <input type="submit" value="Update">
+                                                        </fieldset>
+                                                        
+                                                    </form>
+                                                    <?php
+                                                }  
+                                            } else {
+                                                echo "Now warnings found for ". $user['user_name'];
+                                            }
+                                        } catch(PDOException $e) {
+                                            echo 'ERROR: ' . $e->getMessage();
+                                        }
+                                    }                     
+                                }
+                                
+                            }
+
+
                         } else {
                             echo "No users found :(";
                         }

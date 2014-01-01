@@ -1,6 +1,6 @@
 <?php
 require('config.php');
-session_set_cookie_params(1200, '/bbs');
+session_set_cookie_params(1200, BASE_PATH);
 session_start();
 
 if(!isset($_SESSION['user_ID'])) {
