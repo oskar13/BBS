@@ -50,9 +50,8 @@ if(!isset($_SESSION['user_ID'])) {
                 /////////////////////////////////////////
                 if ($_REQUEST['page'] == "boards") {
                     
-                     try {
-                        
-                        $stmt = $conn->prepare('SELECT board_url, board_name
+                    try {
+                        $stmt = $conn->prepare('SELECT board_ID, board_url, board_name
                         FROM boards');
 
                         $stmt->execute();
@@ -74,7 +73,7 @@ if(!isset($_SESSION['user_ID'])) {
                                     echo "odd";
                                 }
                                 $odd_even++;
-                                echo "'><td><a href='". BASE_PATH . $board_list_row['board_url'] ."' title='". $board_list_row['board_name'] ."'>". $board_list_row['board_name'] ."</a></td><td><a href='" . BASE_PATH . $board_list_row['board_url'] . "'>/". $board_list_row['board_url'] ."/</a></td><td><a href='#'>Modify</a></td></tr>";
+                                echo "'><td><a href='". BASE_PATH . $board_list_row['board_url'] ."' title='". $board_list_row['board_name'] ."'>". $board_list_row['board_name'] ."</a></td><td><a href='" . BASE_PATH . $board_list_row['board_url'] . "'>/". $board_list_row['board_url'] ."/</a></td><td><a href='?page=boards&modify_board_ID=". $board_list_row['board_ID'] ."'>Modify</a></td></tr>";
 
                             }
                             echo "</table>";
@@ -83,6 +82,68 @@ if(!isset($_SESSION['user_ID'])) {
                         }
                     } catch(PDOException $e) {
                         echo 'ERROR: ' . $e->getMessage();
+                    }
+                    if (isset($_REQUEST['modify_board_ID'])) {
+                        try {
+                
+                            $stmt = $conn->prepare('SELECT board_ID, board_meta, board_url, board_name
+                            FROM boards
+                            WHERE board_ID = :board_ID');
+                            $stmt->execute(array('board_ID' => $_REQUEST['modify_board_ID'] ));
+                            $modify_board = $stmt -> fetch(PDO::FETCH_ASSOC);
+                        } catch(PDOException $e) {
+                            echo 'ERROR: ' . $e->getMessage();
+                        }
+                        if ($modify_board) {
+                            ?>
+                            <h3>Edit <?php echo $modify_board['board_name'] . " - /". $modify_board['board_url']."/"; ?></h3>
+                            <form action="admin_post.php" method="post">
+                                <input type="hidden" name="data" value="edit_board" />
+                                <input type="hidden" name="board_ID" value="<?php echo $modify_board['board_ID']; ?>" />
+
+                                <dl>
+                                    <dt><label for="board_meta">Board Meta</label></dt>
+                                    <dd><textarea class="input-text" rows="4" cols="50" name="board_meta"><?php echo $modify_board['board_meta']; ?></textarea></dd>
+                                    <br />
+                                    <dt><label for="board_url">Board URL</label></dt>
+                                    <dd><input class="input-text" type="text" name="board_url" value="<?php echo $modify_board['board_url']; ?>" /></dd>
+                                    <br />
+                                    <dt><label for="board_name">Board Name</label></dt>
+                                    <dd><input class="input-text" type="text" name="board_name" value="<?php echo $modify_board['board_name']; ?>" /></dd>
+                                <dl>
+                                <br>
+                                <input type="submit" value="Update">
+                                
+                            </form>
+                            <?php 
+                        }
+
+                    } elseif (isset($_REQUEST['new_board'])) {
+                        ?>
+                        <h3>New Board</h3>
+                        <form action="admin_post.php" method="post">
+                            <input type="hidden" name="data" value="new_board" />
+
+                            <dl>
+                                <dt><label for="board_name">Board Name</label></dt>
+                                <dd><input class="input-text" type="text" name="board_name" /></dd>
+                                <br />
+                                <dt><label for="board_url">Board URL</label></dt>
+                                <dd><input class="input-text" type="text" name="board_url" /></dd>
+                                <br />
+                                <dt><label for="board_meta">Board Meta</label></dt>
+                                <dd><textarea class="input-text" rows="4" cols="50" name="board_meta"></textarea></dd>
+                            <dl>
+                            <br>
+                            <input type="submit" value="Submit">
+                            
+                        </form>
+                        <?php
+                    } else {
+                        ?>
+                        <br />
+                        <a href="?page=boards&new_board=1">Create a new board.</a>
+                        <?php
                     }
                 }
                 /////////////////////////////////////////
@@ -210,7 +271,7 @@ if(!isset($_SESSION['user_ID'])) {
                                             <dl>
                                                 <dt><label for="user_name">User Name</label></dt>
                                                 <dd><input class="input-text" type="text" name="user_name" value="<?php echo $user['user_name']; ?>" /></dd>
-                                                <dt><label for="admin_level">User Level</label></dt>
+                                                <dt><label for="admin_level">Admin Level</label></dt>
                                                 <dd><input class="input-text" type="text" name="admin_level" value="<?php echo $user['admin_level']; ?>" /></dd>
                                             </dl>
                                             <fieldset>
@@ -237,8 +298,10 @@ if(!isset($_SESSION['user_ID'])) {
                                                     <dt><label for="comment">Comment</label></dt>
                                                     <dd><textarea class="input-text" rows="4" cols="50" name="comment"></textarea></dd>
                                                 <dl>
+                                                <br>
+                                                <input type="submit" value="Submit">
                                             </fieldset>
-                                            <input type="submit" value="Submit">
+                                            
                                         </form>
                                         <?php
                                     } else {
