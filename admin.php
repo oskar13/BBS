@@ -42,7 +42,7 @@ if(!isset($_SESSION['user_ID'])) {
                             <br />
                             <dt><label for="content">Post content</label></dt>
                             <dd><textarea class="input-text" rows="8" cols="60" name="content"></textarea></dd>
-                        <dl>
+                        </dl>
                         <input style="margin-top: 1em;" type="submit" value="Publish">
                     </form>
                     <?php
@@ -60,6 +60,7 @@ if(!isset($_SESSION['user_ID'])) {
 
                         if ( count($board_list) ) {
                             ?>
+                            <div class="half">
                             <table>
                             <tr><th>Board Name</th><th></th><th></th></tr>
                             <?php
@@ -76,7 +77,10 @@ if(!isset($_SESSION['user_ID'])) {
                                 echo "'><td><a href='". BASE_PATH . $board_list_row['board_url'] ."' title='". $board_list_row['board_name'] ."'>". $board_list_row['board_name'] ."</a></td><td><a href='" . BASE_PATH . $board_list_row['board_url'] . "'>/". $board_list_row['board_url'] ."/</a></td><td><a href='?page=boards&modify_board_ID=". $board_list_row['board_ID'] ."'>Modify</a></td></tr>";
 
                             }
-                            echo "</table>";
+                            ?>
+                            </table>
+                            </div>
+                            <?php
                         } else {
                             echo "No boards found";
                         }
@@ -96,6 +100,7 @@ if(!isset($_SESSION['user_ID'])) {
                         }
                         if ($modify_board) {
                             ?>
+                            <div class="half-last">
                             <h3>Edit <?php echo $modify_board['board_name'] . " - /". $modify_board['board_url']."/"; ?></h3>
                             <form action="admin_post.php" method="post">
                                 <input type="hidden" name="data" value="edit_board" />
@@ -110,16 +115,18 @@ if(!isset($_SESSION['user_ID'])) {
                                     <br />
                                     <dt><label for="board_name">Board Name</label></dt>
                                     <dd><input class="input-text" type="text" name="board_name" value="<?php echo $modify_board['board_name']; ?>" /></dd>
-                                <dl>
+                                </dl>
                                 <br>
                                 <input type="submit" value="Update">
                                 
                             </form>
+                            </div>
                             <?php 
                         }
 
                     } elseif (isset($_REQUEST['new_board'])) {
                         ?>
+                        <div class="half-last">
                         <h3>New Board</h3>
                         <form action="admin_post.php" method="post">
                             <input type="hidden" name="data" value="new_board" />
@@ -133,11 +140,12 @@ if(!isset($_SESSION['user_ID'])) {
                                 <br />
                                 <dt><label for="board_meta">Board Meta</label></dt>
                                 <dd><textarea class="input-text" rows="4" cols="50" name="board_meta"></textarea></dd>
-                            <dl>
+                            </dl>
                             <br>
                             <input type="submit" value="Submit">
                             
                         </form>
+                        </div>
                         <?php
                     } else {
                         ?>
@@ -198,6 +206,7 @@ if(!isset($_SESSION['user_ID'])) {
 
                         if ( count($user_list) ) {
                             ?>
+                            <div class="half">
                             <table>
                             <tr><th>User name</th><th>Admin Level</th><th>Warnings</th><th></th><th></th></tr>
                             <?php
@@ -245,7 +254,38 @@ if(!isset($_SESSION['user_ID'])) {
                                 echo "</td><td><a href='?page=users&user_ID=". $user_list_row['user_ID'] ."'>edit</a></td></tr>";
 
                             } 
-                            echo "</table>";
+                            ?>
+                            </table>
+                            </div>
+                            <div class="half-last">
+                            <?php
+                            if (isset($_REQUEST['new_user'])) {
+                                ?>
+                                <h3>New user:</h3>
+                                <form>
+                                    <input type="hidden" name="data" value="new_user" />
+                                    <dl>
+                                        <dt><label for="user_name">User Name</label></dt>
+                                        <dd><input class="input-text" type="text" name="user_name" /></dd>
+                                        <dt><label for="user_pass">Password</label></dt>
+                                        <dd><input class="input-text" type="password" name="user_pass" /></dd>
+                                        <dt><label for="user_pass_again">Password again</label></dt>
+                                        <dd><input class="input-text" type="password" name="user_pass_again" /></dd>
+                                        <dt><label for="admin_level">Admin Level</label></dt>
+                                        <dd><input class="input-text" type="text" name="admin_level" /></dd>
+                                    </dl>
+                                    <input type="submit" value="Create" />
+                                </form>
+                                <?php                                
+                            } else {
+                                ?>
+                                <a href="?page=users&new_user=1">Create a new user</a>
+                                <?php
+                            }
+                            ?>
+                            </div>
+                            <div style="clear:both;"></div>
+                            <?php
 
                             if (isset($_REQUEST['user_ID'])) {
                                 try {
@@ -283,7 +323,7 @@ if(!isset($_SESSION['user_ID'])) {
                                                     <br />
                                                     <dt><label for="ban_reason">Reason</label></dt>
                                                     <dd><textarea class="input-text" rows="4" cols="50" name="ban_reason"><?php echo $user['ban_reason']; ?></textarea></dd>
-                                                <dl>
+                                                </dl>
                                             </fieldset>
                                             <input type="submit" value="Update">
                                         </form>
@@ -297,7 +337,7 @@ if(!isset($_SESSION['user_ID'])) {
                                                 <dl>
                                                     <dt><label for="comment">Comment</label></dt>
                                                     <dd><textarea class="input-text" rows="4" cols="50" name="comment"></textarea></dd>
-                                                <dl>
+                                                </dl>
                                                 <br>
                                                 <input type="submit" value="Submit">
                                             </fieldset>
@@ -327,7 +367,7 @@ if(!isset($_SESSION['user_ID'])) {
                                                             <dl>
                                                                 <dt><label for="comment">Comment</label></dt>
                                                                 <dd><textarea class="input-text" rows="4" cols="50" name="comment"><?php echo $warnings_row['comment']; ?></textarea></dd>
-                                                            <dl>
+                                                            </dl>
                                                             <br>
                                                             <input type="submit" value="Update">
                                                         </fieldset>
@@ -390,7 +430,7 @@ if(!isset($_SESSION['user_ID'])) {
                                 <br />
                                 <dt><label for="site_desc">Site Descritpion</label></dt>
                                 <dd><textarea class="input-text" rows="4" cols="50" name="site_desc"><?php echo $site_settings['site_desc']; ?></textarea></dd>
-                            <dl>
+                            </dl>
                         </fieldset>
                         <input type="submit" value="Update">
                     </form>
