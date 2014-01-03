@@ -262,7 +262,7 @@ if(!isset($_SESSION['user_ID'])) {
                             if (isset($_REQUEST['new_user'])) {
                                 ?>
                                 <h3>New user:</h3>
-                                <form>
+                                <form action="admin_post.php" method="post">
                                     <input type="hidden" name="data" value="new_user" />
                                     <dl>
                                         <dt><label for="user_name">User Name</label></dt>
@@ -413,7 +413,7 @@ if(!isset($_SESSION['user_ID'])) {
 
                     ?>
                     <form action="admin_post.php" method="post">
-
+                        <input type="hidden" name="data" value="site_settings" />
                         <dl>
                             <dt><label for="site_title">Site title</label></dt>
                             <dd><input class="input-text" type="text" name="site_title" value="<?php echo $site_settings['site_name']; ?>" /></dd>
