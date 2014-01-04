@@ -300,14 +300,14 @@ if (isset($_SESSION['user_level'])) {
 }
 
 
-echo "1111111";
+
       try {
                 
           $stmt = $conn->prepare("INSERT INTO posts (user_ID ,poster_ip ,post_date ,post_name ,post_email ,post_subject ,post_content ,board_ID ,sticky_level ,del_pass ,pic_ID ,parent_ID ,last_reply_date)
           VALUES (:user_ID ,:poster_ip ,:post_date ,:post_name ,:post_email ,:post_subject ,:post_content ,:board_ID ,:sticky_level ,:del_pass ,:pic_ID ,:parent_ID ,:last_reply_date)");
-          echo "222222222222222";
+
           $stmt->execute(array('user_ID' => $user_ID, 'poster_ip' => $poster_ip, 'post_date' => $post_date, 'post_name' => $post_name , 'post_email' => $post_email , 'post_subject' => $post_subject , 'post_content' => $post_content ,'board_ID' => $board_ID ,'sticky_level' => $sticky_level, 'del_pass' => $del_pass, 'pic_ID' => $pic_ID, 'parent_ID' => $parent_ID, 'last_reply_date' => $last_reply_date ));
-          echo "333333333333333";
+
           } catch(PDOException $e) {
               echo 'ERROR: ' . $e->getMessage();
           }
@@ -318,19 +318,8 @@ echo "1111111";
 
 
 
-
-
-
-
-
-
-
-
-
   echo "<pre>";
   echo var_dump($_FILES);
   echo "</pre>";
-  echo $_POST['name'];
-
-  echo $_POST['subject'];
+header('Location: ' . $_SERVER['HTTP_REFERER']);
 ?> 

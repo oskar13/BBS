@@ -150,3 +150,6 @@ if(isset($_SESSION['user_ID'])) {
 		}
 	}
 }
+
+
+header('Location: ' . $_SERVER['HTTP_REFERER']);

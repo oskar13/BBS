@@ -57,7 +57,7 @@ if ($boards['board_url'] != $board_url) {
         <div id="page-container">
 
         <header id="page-header">
-        <div class="board-list">[
+        <span class="board-list">[
         <?php
 
             try {
@@ -85,9 +85,33 @@ if ($boards['board_url'] != $board_url) {
                 echo 'ERROR: ' . $e->getMessage();
             }
             ?>
-            ]</div>
+            ]</span>
+            <?php
+            if(isset($_SESSION['user_ID'])) {
+                echo "<span id='user-meta'>";
+                echo "Sup ".$_SESSION['user_name'];
+                if ($_SESSION['admin_level'] > 0) {
+                    echo " - <a href='". BASE_PATH ."admin.php'>Admin</a>";
+                }
+                echo " - <a href='". BASE_PATH ."login.php?logout=1'>Logout</a>";
+                echo "</span>";
+            } else {
+                echo " <a href='". BASE_PATH ."login.php'>Login</a>";
+            }
+            ?>
             <div id="board-title">
-                <div id="banner"><div style="width:300px;height:100px;background:#d0d0d0;">placeholder</div></div>
+                <div id="banner">
+                <?php
+                $imagesDir = 'banners/';
+
+                $images = glob($imagesDir . '*.{jpg,jpeg,png,gif}', GLOB_BRACE);
+                if ($images) {
+                    $randomImage = $images[array_rand($images)];
+                    echo "<img src='". BASE_PATH .$randomImage."' alt='banner' />";
+                }
+
+                ?>
+                </div>
                 <h1>/<?php  echo $boards['board_url']; ?>/ - <?php  echo $boards['board_name']; ?></h1>
                 <span><?php  echo $boards['board_meta']; ?></span>
             </div>

@@ -103,10 +103,23 @@ if ($boards['board_ID'] != True) {
                 }
                 echo " - <a href='". BASE_PATH ."login.php?logout=1'>Logout</a>";
                 echo "</span>";
+            } else {
+                echo " <a href='". BASE_PATH ."login.php'>Login</a>";
             }
             ?>
             <div id="board-title">
-                <div id="banner"><div style="width:300px;height:100px;background:#d0d0d0;">placeholder</div></div>
+                <div id="banner">
+                <?php
+                $imagesDir = 'banners/';
+
+                $images = glob($imagesDir . '*.{jpg,jpeg,png,gif}', GLOB_BRACE);
+                if ($images) {
+                    $randomImage = $images[array_rand($images)];
+                    echo "<img src='". BASE_PATH .$randomImage."' alt='banner' />";
+                }
+
+                ?>
+                </div>
                 <h1>/<?php  echo $boards['board_url']; ?>/ - <?php  echo $boards['board_name']; ?></h1>
                 <span><?php  echo $boards['board_meta']; ?></span>
             </div>
