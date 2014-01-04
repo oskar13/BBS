@@ -3,6 +3,8 @@ require('config.php');
 session_set_cookie_params(1200, BASE_PATH);
 session_start();
 
+require('ban.php');
+
 if (!isset($_POST['board_ID'])) {
   exit();
 }
