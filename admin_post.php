@@ -8,42 +8,130 @@ if(!isset($_SESSION['user_ID'])) {
     exit();
 }
 ////////////////////////////////////////////////////////////
-//////////                NÄIDIS             ///////////////
+//////////                ARTICLE            ///////////////
 ////////////////////////////////////////////////////////////
 
-// Lisasin näidise kuidas kasutada uut PDO objekti
-// Asenda "SELECT :asdf FROM articles" oma päringuga
-// :asdf on muutuja mis tuleb all siduda päris muutujuga $stmt->execute(array('asdf' => $variable));
-/*
-if (isset($_POST['new_article'])) {
-    $variable = htmlspecialchars($_POST['variable']);
+
+if ($_POST['data'] == "new_article") {
+    if (!isset($_POST['content']) || !isset($_POST['heading'])) {
+        echo "Error";
+        die();
+    }
+
+    if (empty($_POST['content']) || empty($_POST['heading'])) {
+        echo "Empty input not allowed!";
+        die();
+    }
 
     try {
-        $stmt = $conn->prepare("SELECT :asdf FROM articles");
-        $stmt->execute(array('asdf' => $variable));
+        $stmt = $conn->prepare("INSERT INTO articles (user_ID, a_date, heading, content)
+            VALUES (:user_ID, :a_date, :heading, :content)");
+        $stmt->execute(array('user_ID' => $_SESSION['user_ID'], 'a_date' => time(), 'heading' => $_POST['heading'], 'content' => $_POST['content']));
     } catch(PDOException $e) {
         echo 'ERROR: ' . $e->getMessage();
         die();
     }
     header('Location: admin.php?page=new_article');
 }
-*/
+
+
+////////////////////////////////////////////////////////////
+//////////                BOARDS             ///////////////
+////////////////////////////////////////////////////////////
+
+if ($_POST['data'] == "edit_board") {
+    if (!isset($_POST['board_ID'])) {
+        echo "No ID, error";
+        die();
+    }
+
+    if (!isset($_POST['board_url']) || !isset($_POST['board_name'])) {
+        echo "Error";
+        die();
+    }
+
+    if (empty($_POST['board_url']) || empty($_POST['board_name'])) {
+        echo "Empty input not allowed!";
+        die();
+    }
+
+    try {
+        $stmt = $conn->prepare("UPDATE boards SET 
+            board_meta = :board_meta,
+            board_url = :board_url,
+            board_name = :board_name
+            WHERE board_ID = :board_ID");
+        $stmt->execute(array('board_ID' => $_POST['board_ID'], 'board_meta' => $_POST['board_meta'], 'board_url' => $_POST['board_url'], 'board_name' => $_POST['board_name']));
+    } catch(PDOException $e) {
+        echo 'ERROR: ' . $e->getMessage();
+        die();
+    }
+    header('Location: admin.php?page=boards');
+    die();
+}
+
+
+
+if ($_POST['data'] == "new_board") {
+    if (!isset($_POST['board_url']) || !isset($_POST['board_name'])) {
+        echo "Error";
+        die();
+    }
+
+    if (empty($_POST['board_url']) || empty($_POST['board_name'])) {
+        echo "Empty input not allowed!";
+        die();
+    }
+
+    try {
+        $stmt = $conn->prepare("INSERT INTO boards (board_name, board_url, board_meta)
+            VALUES (:board_name, :board_url, :board_meta)");
+        $stmt->execute(array('board_meta' => $_POST['board_meta'], 'board_url' => $_POST['board_url'], 'board_name' => $_POST['board_name']));
+    } catch(PDOException $e) {
+        echo 'ERROR: ' . $e->getMessage();
+        die();
+    }
+    header('Location: admin.php?page=boards');
+    die();
+}
+
+if (($_POST['data'] == "delete_board") && isset($_POST['board_ID'])) {
+    try {
+        $stmt = $conn->prepare("DELETE FROM boards
+        WHERE board_ID = :board_ID");
+        $stmt->execute(array('board_ID' => $_POST['board_ID']));
+    } catch(PDOException $e) {
+        echo 'ERROR: ' . $e->getMessage();
+        die();
+    }
+
+    try {
+        $stmt = $conn->prepare("DELETE FROM posts
+        WHERE board_ID = :board_ID");
+        $stmt->execute(array('board_ID' => $_POST['board_ID']));
+    } catch(PDOException $e) {
+        echo 'ERROR: ' . $e->getMessage();
+        die();
+    }
+    header('Location: admin.php?page=boards');
+    die();
+}
 
 ////////////////////////////////////////////////////////////
 //////////                 BANS              ///////////////
 ////////////////////////////////////////////////////////////
 
-if (isset($_POST['del_ban'])) {
-    $variable = htmlspecialchars($_POST['variable']);
-
+if (($_POST['data'] == "del_ban") && isset($_POST['del_ban_ID'])) {
     try {
-        $stmt = $conn->prepare("SELECT :asdf FROM articles");
-        $stmt->execute(array('asdf' => $variable));
+        $stmt = $conn->prepare("DELETE FROM banned
+        WHERE ban_ID = :ban_ID");
+        $stmt->execute(array('ban_ID' => $_POST['del_ban_ID']));
     } catch(PDOException $e) {
         echo 'ERROR: ' . $e->getMessage();
         die();
     }
-    header('Location: admin.php?page=new_article');
+    header('Location: admin.php?page=bans');
+    die();
 }
 
 ////////////////////////////////////////////////////////////
@@ -72,6 +160,7 @@ if ($_POST['data'] == "new_user") {
             die();
         }
         header('Location: admin.php');
+        die();
     }
 
 }
@@ -94,18 +183,18 @@ if ($_POST['data'] == "edit_user") {
         try {
             $stmt = $conn->prepare("UPDATE users SET 
             user_name = :user_name,
-            user_pass = :user_pass,
             admin_level = :admin_level,
             banned = :banned,
             ban_reason = :ban_reason
             WHERE user_ID = :user_ID");
 
-            $stmt->execute(array('user_name' => $_POST['user_name'], 'user_pass' => $_POST['user_pass'], 'admin_level' => $_POST['admin_level'], 'banned' => $_POST['banned'], 'ban_reason' => $_POST['ban_reason'], 'user_ID' => $_POST['user_ID']));
+            $stmt->execute(array('user_name' => $_POST['user_name'], 'admin_level' => $_POST['admin_level'], 'banned' => $_POST['banned'], 'ban_reason' => $_POST['ban_reason'], 'user_ID' => $_POST['user_ID']));
         } catch(PDOException $e) {
             echo 'ERROR: ' . $e->getMessage();
             die();
         }
         header('Location: admin.php?page=users');
+        die();
     }
 }
 
@@ -127,11 +216,12 @@ if ($_POST['data'] == "add_warning") {
             die();
         }
         header('Location: admin.php?page=users');
+        die();
     }
 }
 
 if ($_POST['data'] == "edit_warning") {
-    if (isset($_POST['warning_ID']  && isset($_POST['comment']))) {
+    if (isset($_POST['warning_ID'])  && isset($_POST['comment'])) {
         try {
             $stmt = $conn->prepare("UPDATE warnings SET 
             comment = :comment
@@ -143,6 +233,7 @@ if ($_POST['data'] == "edit_warning") {
             die();
         }
         header('Location: admin.php?page=users');
+        die();
     }
 }
 
@@ -172,5 +263,6 @@ if ($_POST['data'] == "site_settings") {
         die();
     }
     header('Location: admin.php?page=site_settings');
+    die();
 }
 
