@@ -1,6 +1,6 @@
 <?php
 require('config.php');
-session_set_cookie_params(1200, '/bbs');
+session_set_cookie_params(1200, BASE_PATH);
 session_start();
 
 
@@ -174,21 +174,21 @@ if ($boards['board_ID'] != True) {
                 WHERE posts.board_ID =:board_ID AND posts.parent_ID IS NULL
                 ORDER BY posts.sticky_level DESC , posts.last_reply_date DESC
                 LIMIT :skip,:ppp');
-/*
-                $stmt->execute(array('board_ID' => $board_ID, 'ppp' => POSTS_PER_PAGE));
-             
-                $result = $stmt->fetchAll();
-                //PDO EI LASE LIMITile seada parameetrit mis pole numbrina määratud
-                //Peab kasutama bindParam();  
-*/
+                /*
+                    $stmt->execute(array('board_ID' => $board_ID, 'ppp' => POSTS_PER_PAGE));
+                    
+                    $result = $stmt->fetchAll();
+                    //PDO EI LASE LIMITile seada parameetrit mis pole numbrina määratud
+                    //Peab kasutama bindParam();  
+                */
 
-    $stmt->bindParam(':board_ID', $board_ID, PDO::PARAM_INT);
-    $stmt->bindParam(':skip', $skip, PDO::PARAM_INT);
-    $stmt->bindParam(':ppp', $ppp, PDO::PARAM_INT);
+                $stmt->bindParam(':board_ID', $board_ID, PDO::PARAM_INT);
+                $stmt->bindParam(':skip', $skip, PDO::PARAM_INT);
+                $stmt->bindParam(':ppp', $ppp, PDO::PARAM_INT);
 
-    $stmt->execute();
+                $stmt->execute();
 
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
@@ -223,11 +223,11 @@ if ($boards['board_ID'] != True) {
                 <div class="thread">
 
 
-                    <div class="post-parent">
+                    <div class="post-parent" id="<?php echo $posts_row['post_ID']; ?>">
 
                         <?php if ($posts_pic_info==True) { ?>
-                        <div class="file-info">File: <a href="<?php echo BASE_PATH."upload/" . $posts_pic_info['pic_newname']; ?>"><?php echo $posts_pic_info['pic_newname']; ?></a>-(<?php echo $posts_pic_info['pic_size']; ?> KB, <?php echo $posts_pic_info['file_x']; ?>x<?php echo $posts_pic_info['file_y']; ?>, <?php echo $posts_pic_info['pic_name']; ?>)</div>
-                        <a class="post-image" href="<?php echo BASE_PATH."upload/" . $posts_pic_info['pic_newname']; ?>"><img src="<?php echo BASE_PATH."upload/" . $posts_pic_info['pic_thumbname']; ?>"></a>
+                            <div class="file-info">File: <a href="<?php echo BASE_PATH."upload/" . $posts_pic_info['pic_newname']; ?>"><?php echo $posts_pic_info['pic_newname']; ?></a>-(<?php echo $posts_pic_info['pic_size']; ?> KB, <?php echo $posts_pic_info['file_x']; ?>x<?php echo $posts_pic_info['file_y']; ?>, <?php echo $posts_pic_info['pic_name']; ?>)</div>
+                            <a class="post-image" href="<?php echo BASE_PATH."upload/" . $posts_pic_info['pic_newname']; ?>"><img src="<?php echo BASE_PATH."upload/" . $posts_pic_info['pic_thumbname']; ?>"></a>
                         <?php } ?>
                         <header class="post-meta">
                             <?php
@@ -261,6 +261,21 @@ if ($boards['board_ID'] != True) {
                             ?>
                             </span>
                             <span class="post-date"><?php echo date('Y/m/d H:i:s', $posts_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $posts_row['post_ID']; ?></a>  [<a href="<?php echo BASE_PATH . $board_url ."/res/" .$posts_row['post_ID']; ?>">Reply</a>]</span>
+                            <?php if(isset($_SESSION['user_ID'])) {
+                                echo "<div class='admin'>";
+                                if ($_SESSION['admin_level'] < DEL_LEVEL) {
+                                    echo "report post";
+
+                                } else {
+                                    echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&del_post=1' title='Delete post'>D</a>] ";
+                                    echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&ban=1' title='Ban IP'>B</a>] ";
+                                    echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&del_post=1&ban=1' title='Delete and Ban'>D&B</a>] ";
+                                    echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&del_img=1' title='Delete picture'>DI</a>]";
+
+                                }
+                                echo "</div>";
+                            }
+                            ?>
                         </header>
                         <div class="post-content">
 
@@ -319,7 +334,7 @@ if ($boards['board_ID'] != True) {
                     ?>
 
 
-                                        <div class="reply-container">
+                                        <div class="reply-container" id="<?php echo $reply_row['post_ID']; ?>">
                                             <div class="reply-arrows">>></div>
                                             <div class="post-reply">
                                                 <header class="post-meta">
@@ -328,6 +343,11 @@ if ($boards['board_ID'] != True) {
                                                             echo "<span class='subject'>";
                                                             echo $reply_row['post_subject'];
                                                             echo "</span>";
+                                                        }
+                                                    ?>
+                                                    <?php
+                                                        if ($reply_row['post_email'] ) {
+                                                            echo "<a href='mailto:".$reply_row['post_email']."'>";
                                                         }
                                                     ?>
                                                     <span class="username">
@@ -342,16 +362,22 @@ if ($boards['board_ID'] != True) {
                                                             }
                                                         }
                                                     ?> 
+                                                    <?php
+                                                        if ($reply_row['post_email'] ) {
+                                                            echo "</a>";
+                                                        }
+                                                    ?>
+
                                                     </span>
                                                     <span class="post-date"><?php echo date('Y/m/d H:i:s', $reply_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $reply_row['post_ID']; ?></a>
                                                     <?php if ($reply_pic_info==True) { ?>
-                                                    <div class="file-info">File: <a href="#"><?php echo $reply_pic_info['pic_newname']; ?>.jpg</a>-(<?php echo $reply_pic_info['pic_size']; ?> KB, <?php echo $reply_pic_info['file_x']; ?>x<?php echo $reply_pic_info['file_y']; ?>, <?php echo $reply_pic_info['pic_name']; ?>)</div>
+                                                    <div class="file-info">File: <a href="<?php echo BASE_PATH."upload/" . $reply_pic_info['pic_newname']; ?>"><?php echo $reply_pic_info['pic_newname']; ?></a>-(<?php echo $reply_pic_info['pic_size']; ?> KB, <?php echo $reply_pic_info['file_x']; ?>x<?php echo $reply_pic_info['file_y']; ?>, <?php echo $reply_pic_info['pic_name']; ?>)</div>
                                                     <a class="post-image" href="<?php echo BASE_PATH."upload/" . $reply_pic_info['pic_newname']; ?>"><img src="<?php echo BASE_PATH."upload/" . $reply_pic_info['pic_thumbname']; ?>"></a>
                                                     <?php } ?>
                                                 </header>
                                                    <div class="post-content">
-                                                    <?php echo $reply_row['post_content']; ?>
-                                                </div>
+                                                        <?php echo $reply_row['post_content']; ?>
+                                                    </div>
                                                </div>
                                                
                                         </div>

@@ -25,7 +25,7 @@ if(!isset($_SESSION['user_ID'])) {
         <div id="page-container">
             <nav id="nav">
                 <ul>
-                    <li><a href="admin.php">Admin Home</a></li><li><a href="?page=new_article">New Article</a></li><li><a href="?page=boards">Boards</a></li><li><a href="?page=bans">List of Bans</a></li><li><a href="?page=users">Manage Users</a></li><li><a href="?page=site_settings">Site settings</a></li>
+                    <li><a href="<?php echo BASE_PATH; ?>">Home</a></li><li><a href="?page=new_article">New Article</a></li><li><a href="?page=boards">Boards</a></li><li><a href="?page=bans">List of Bans</a></li><li><a href="?page=users">Manage Users</a></li><li><a href="?page=site_settings">Site settings</a></li>
                 </ul>
             </nav>
 
@@ -166,7 +166,7 @@ if(!isset($_SESSION['user_ID'])) {
                     
                      try {
                         
-                        $stmt = $conn->prepare('SELECT ban_ID, poster_ip, reason, ban_end, ban_begin
+                        $stmt = $conn->prepare('SELECT ban_ID, ip, reason, ban_end, ban_begin
                         FROM banned');
 
                         $stmt->execute();
@@ -188,7 +188,7 @@ if(!isset($_SESSION['user_ID'])) {
                                         echo "odd";
                                     }
                                     $odd_even++;
-                                echo "'><td>". $ban_list_row['poster_ip'] ."</td><td>". $ban_list_row['reason'] ."</td><td>". $ban_list_row['ban_begin'] ."</td><td>". $ban_list_row['ban_end'] ."</td>";
+                                echo "'><td>". $ban_list_row['ip'] ."</td><td>". $ban_list_row['reason'] ."</td><td>". $ban_list_row['ban_begin'] ."</td><td>". $ban_list_row['ban_end'] ."</td>";
                                 echo "<td><form action='admin_post.php' method='post'><input type='hidden' name='data' value='del_ban' /><input type='hidden' name='del_ban_ID' value='". $ban_list_row['ban_ID'] ."' /><input type='submit' value='Delete Ban' /></form></td></tr>";
 
                             } 
@@ -216,7 +216,7 @@ if(!isset($_SESSION['user_ID'])) {
                             ?>
                             <div class="half">
                             <table>
-                            <tr><th>User name</th><th>Admin Level</th><th>Warnings</th><th></th><th></th></tr>
+                            <tr><th>User name</th><th>Admin Level</th><th>Warnings</th><th></th><th></th><th></th></tr>
                             <?php
                             $odd_even = 0;
                             foreach($user_list as $user_list_row) {
@@ -259,7 +259,9 @@ if(!isset($_SESSION['user_ID'])) {
                                 if ($user_list_row['banned'] > 0) {
                                     echo "<span style='color:red'>banned</span>";
                                 }
-                                echo "</td><td><a href='?page=users&user_ID=". $user_list_row['user_ID'] ."'>edit</a></td></tr>";
+                                echo "</td><td><a href='?page=users&user_ID=". $user_list_row['user_ID'] ."'>edit</a></td>";
+                                echo "<td><form action='admin_post.php' method='post'><input type='hidden' name='data' value='del_user' /><input type='hidden' name='user_ID' value='". $user_list_row['user_ID'] ."' /><input type='submit' value='delete' /></form></td></td>";
+                                echo "</tr>";
 
                             } 
                             ?>
@@ -396,7 +398,9 @@ if(!isset($_SESSION['user_ID'])) {
 
 
                         } else {
-                            echo "No users found :(";
+                            ?>
+                            No users found.
+                            <?php
                         }
                     } catch(PDOException $e) {
                         echo 'ERROR: ' . $e->getMessage();

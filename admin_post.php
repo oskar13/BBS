@@ -237,6 +237,19 @@ if ($_POST['data'] == "edit_warning") {
     }
 }
 
+if (($_POST['data'] == "del_user") && isset($_POST['user_ID'])) {
+    try {
+        $stmt = $conn->prepare("DELETE FROM users
+        WHERE user_ID = :user_ID");
+        $stmt->execute(array('user_ID' => $_POST['user_ID']));
+    } catch(PDOException $e) {
+        echo 'ERROR: ' . $e->getMessage();
+        die();
+    }
+    header('Location: admin.php?page=users');
+    die();
+}
+
 ////////////////////////////////////////////////////////////
 //////////        SITE SETTINGS UPDATE       ///////////////
 ////////////////////////////////////////////////////////////
