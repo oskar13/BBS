@@ -188,7 +188,7 @@ if(!isset($_SESSION['user_ID'])) {
                                         echo "odd";
                                     }
                                     $odd_even++;
-                                echo "'><td>". $ban_list_row['ip'] ."</td><td>". $ban_list_row['reason'] ."</td><td>". $ban_list_row['ban_begin'] ."</td><td>". $ban_list_row['ban_end'] ."</td>";
+                                echo "'><td>". $ban_list_row['ip'] ."</td><td>". $ban_list_row['reason'] ."</td><td>". date('Y/m/d H:i:s', $ban_list_row['ban_begin']) ."</td><td>". date('Y/m/d H:i:s', $ban_list_row['ban_end']) ."</td>";
                                 echo "<td><form action='admin_post.php' method='post'><input type='hidden' name='data' value='del_ban' /><input type='hidden' name='del_ban_ID' value='". $ban_list_row['ban_ID'] ."' /><input type='submit' value='Delete Ban' /></form></td></tr>";
 
                             } 

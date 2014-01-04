@@ -263,15 +263,13 @@ if ($boards['board_ID'] != True) {
                             <span class="post-date"><?php echo date('Y/m/d H:i:s', $posts_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $posts_row['post_ID']; ?></a>  [<a href="<?php echo BASE_PATH . $board_url ."/res/" .$posts_row['post_ID']; ?>">Reply</a>]</span>
                             <?php if(isset($_SESSION['user_ID'])) {
                                 echo "<div class='admin'>";
-                                if ($_SESSION['admin_level'] < DEL_LEVEL) {
-                                    echo "report post";
-
-                                } else {
+                                if ($_SESSION['admin_level'] >= DEL_LEVEL) {
+                                    echo "IP: ". $posts_row['poster_ip']." - ";
                                     echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&del_post=1' title='Delete post'>D</a>] ";
                                     echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&ban=1' title='Ban IP'>B</a>] ";
                                     echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&del_post=1&ban=1' title='Delete and Ban'>D&B</a>] ";
-                                    echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&del_img=1' title='Delete picture'>DI</a>]";
-
+                                    echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&del_img=1' title='Delete picture'>DI</a>] ";
+                                    echo "<span class='sticky'>[ <a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&sticky=1' title='Make Sticky'> S </a><span class='stickyshow'> Stiky Level: <a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&sticky=1&sticky_level=1' title='Level 1'>1</a> <a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&sticky=1&sticky_level=2' title='Level 2'>2</a> <a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&sticky=1&sticky_level=3' title='Level 3'>3</a> <a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&sticky=1&sticky_level=0' title='Level 0'>0</a> </span>]</span>";
                                 }
                                 echo "</div>";
                             }
@@ -374,6 +372,19 @@ if ($boards['board_ID'] != True) {
                                                     <div class="file-info">File: <a href="<?php echo BASE_PATH."upload/" . $reply_pic_info['pic_newname']; ?>"><?php echo $reply_pic_info['pic_newname']; ?></a>-(<?php echo $reply_pic_info['pic_size']; ?> KB, <?php echo $reply_pic_info['file_x']; ?>x<?php echo $reply_pic_info['file_y']; ?>, <?php echo $reply_pic_info['pic_name']; ?>)</div>
                                                     <a class="post-image" href="<?php echo BASE_PATH."upload/" . $reply_pic_info['pic_newname']; ?>"><img src="<?php echo BASE_PATH."upload/" . $reply_pic_info['pic_thumbname']; ?>"></a>
                                                     <?php } ?>
+                                                    <?php if(isset($_SESSION['user_ID'])) {
+                                                        echo "<div class='admin'>";
+                                                        if ($_SESSION['admin_level'] >= DEL_LEVEL) {
+                                                            echo "IP: ". $posts_row['poster_ip']." - ";
+                                                            echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $reply_row['post_ID'] ."&del_post=1' title='Delete post'>D</a>] ";
+                                                            echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $reply_row['post_ID'] ."&ban=1' title='Ban IP'>B</a>] ";
+                                                            echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $reply_row['post_ID'] ."&del_post=1&ban=1' title='Delete and Ban'>D&B</a>] ";
+                                                            echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $reply_row['post_ID'] ."&del_img=1' title='Delete picture'>DI</a>] ";
+                                                            echo "<span class='sticky'>[ <a href='". BASE_PATH . "del.php?post_ID=" . $reply_row['post_ID'] ."&sticky=1' title='Make Sticky'> S </a><span class='stickyshow'> Stiky Level: <a href='". BASE_PATH . "del.php?post_ID=" . $reply_row['post_ID'] ."&sticky=1&sticky_level=1' title='Level 1'>1</a> <a href='". BASE_PATH . "del.php?post_ID=" . $reply_row['post_ID'] ."&sticky=1&sticky_level=2' title='Level 2'>2</a> <a href='". BASE_PATH . "del.php?post_ID=" . $reply_row['post_ID'] ."&sticky=1&sticky_level=3' title='Level 3'>3</a> <a href='". BASE_PATH . "del.php?post_ID=" . $reply_row['post_ID'] ."&sticky=1&sticky_level=0' title='Level 0'>0</a> </span>]</span>";
+                                                        }
+                                                        echo "</div>";
+                                                    }
+                                                    ?>
                                                 </header>
                                                    <div class="post-content">
                                                         <?php echo $reply_row['post_content']; ?>
