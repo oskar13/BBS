@@ -7,7 +7,6 @@ if(!isset($_SESSION['user_ID'])) {
     header("Location: login.php");
     exit();
 }
-
 ////////////////////////////////////////////////////////////
 //////////                NÄIDIS             ///////////////
 ////////////////////////////////////////////////////////////
@@ -29,6 +28,24 @@ if (isset($_POST['new_article'])) {
     header('Location: admin.php?page=new_article');
 }
 */
+
+////////////////////////////////////////////////////////////
+//////////                 BANS              ///////////////
+////////////////////////////////////////////////////////////
+
+if (isset($_POST['del_ban'])) {
+    $variable = htmlspecialchars($_POST['variable']);
+
+    try {
+        $stmt = $conn->prepare("SELECT :asdf FROM articles");
+        $stmt->execute(array('asdf' => $variable));
+    } catch(PDOException $e) {
+        echo 'ERROR: ' . $e->getMessage();
+        die();
+    }
+    header('Location: admin.php?page=new_article');
+}
+
 ////////////////////////////////////////////////////////////
 //////////             MANAGE USERS          ///////////////
 ////////////////////////////////////////////////////////////
