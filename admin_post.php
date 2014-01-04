@@ -113,6 +113,22 @@ if ($_POST['data'] == "add_warning") {
     }
 }
 
+if ($_POST['data'] == "edit_warning") {
+    if (isset($_POST['warning_ID']  && isset($_POST['comment']))) {
+        try {
+            $stmt = $conn->prepare("UPDATE warnings SET 
+            comment = :comment
+            WHERE warning_ID = :warning_ID");
+
+            $stmt->execute(array('warning_ID' => $_POST['warning_ID'], 'comment' => $_POST['comment']));
+        } catch(PDOException $e) {
+            echo 'ERROR: ' . $e->getMessage();
+            die();
+        }
+        header('Location: admin.php?page=users');
+    }
+}
+
 ////////////////////////////////////////////////////////////
 //////////        SITE SETTINGS UPDATE       ///////////////
 ////////////////////////////////////////////////////////////

@@ -361,7 +361,7 @@ if(!isset($_SESSION['user_ID'])) {
                                                     <form action="admin_post.php" method="post">
                                                         <input type="hidden" name="data" value="edit_warning" />
                                                         <input type="hidden" name="warning_ID" value="<?php echo $warnings_row['warnings_ID']; ?>" />
-                                                        <input type="hidden" name="user_ID" value="<?php echo $user['user_ID']; ?>" />
+                                                        
                                                         <fieldset>
                                                         <legend> Warning ID: <?php echo $warnings_row['warning_ID']; ?> </legend>
                                                             <dl>
