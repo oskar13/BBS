@@ -1,7 +1,9 @@
 <?php
 require('config.php');
+session_set_cookie_params(1200, BASE_PATH);
 session_start();
 
+require('ban.php');
 
 if (isset($_REQUEST['post_ID'])) {
     $post_ID = $_REQUEST['post_ID'];
@@ -147,7 +149,7 @@ if ($boards['board_url'] != $board_url) {
 
             <?php 
             try {
-                $stmt = $conn->prepare('SELECT posts.post_ID, users.user_name, premissions.level, posts.poster_ip, posts.post_date, posts.post_content, posts.sticky_level, posts.pic_ID
+                $stmt = $conn->prepare('SELECT posts.post_ID, users.user_name, premissions.level, posts.poster_ip, posts.post_date, posts.post_name, posts.post_subject, posts.post_email, posts.post_content, posts.sticky_level, posts.pic_ID
                 FROM posts
                 LEFT JOIN users ON posts.user_ID = users.user_ID
                 LEFT JOIN premissions ON posts.user_ID = premissions.premission_ID
@@ -184,14 +186,57 @@ if ($boards['board_url'] != $board_url) {
                 <div class="thread">
 
 
-                    <div class="post-parent">
+                    <div class="post-parent" id="<?php echo $posts_row['post_ID']; ?>">
 
                         <?php if ($posts_pic_info==True) { ?>
-                        <div class="file-info">File: <a href="#"><?php echo $posts_pic_info['pic_newname']; ?></a>-(<?php echo $posts_pic_info['pic_size']; ?> KB, <?php echo $posts_pic_info['file_x']; ?>x<?php echo $posts_pic_info['file_y']; ?>, <?php echo $posts_pic_info['pic_name']; ?>)</div>
-                        <a class="post-image" href="<?php echo BASE_PATH."upload/" . $posts_pic_info['pic_newname']; ?>"><img src="<?php echo BASE_PATH."upload/" . $posts_pic_info['pic_thumbname']; ?>"></a>
+                            <div class="file-info">File: <a href="<?php echo BASE_PATH."upload/" . $posts_pic_info['pic_newname']; ?>"><?php echo $posts_pic_info['pic_newname']; ?></a>-(<?php echo $posts_pic_info['pic_size']; ?> KB, <?php echo $posts_pic_info['file_x']; ?>x<?php echo $posts_pic_info['file_y']; ?>, <?php echo $posts_pic_info['pic_name']; ?>)</div>
+                            <a class="post-image" href="<?php echo BASE_PATH."upload/" . $posts_pic_info['pic_newname']; ?>"><img src="<?php echo BASE_PATH."upload/" . $posts_pic_info['pic_thumbname']; ?>"></a>
                         <?php } ?>
                         <header class="post-meta">
-                            <span class="username"><?php if ($posts_row['user_name'] ) {  echo $posts_row['user_name']; } else { echo "Anonymous"; }?></span> <span class="post-date"><?php echo date('Y/m/d H:i:s', $posts_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $posts_row['post_ID']; ?></a>
+                            <?php
+                                if ($posts_row['post_subject']) {
+                                    echo "<span class='subject'>";
+                                    echo $posts_row['post_subject'];
+                                    echo "</span>";
+                                }
+                            ?>
+                            <?php
+                                if ($posts_row['post_email'] ) {
+                                    echo "<a href='mailto:".$posts_row['post_email']."'>";
+                                }
+                            ?>
+                            <span class="username">
+                            <?php
+                                if ($posts_row['post_name']) {
+                                    echo $posts_row['post_name'];
+                                } else {
+                                    if ($posts_row['user_name'] ) {
+                                        echo $posts_row['user_name'];
+                                    } else {
+                                        echo "Anonymous";
+                                    }
+                                }
+                            ?> 
+                            <?php
+                                if ($posts_row['post_email'] ) {
+                                    echo "</a>";
+                                }
+                            ?>
+                            </span>
+                            <span class="post-date"><?php echo date('Y/m/d H:i:s', $posts_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $posts_row['post_ID']; ?></a> </span>
+                            <?php if(isset($_SESSION['user_ID'])) {
+                                echo "<div class='admin'>";
+                                if ($_SESSION['admin_level'] >= DEL_LEVEL) {
+                                    echo "IP: ". $posts_row['poster_ip']." - ";
+                                    echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&del_post=1' title='Delete post'>D</a>] ";
+                                    echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&ban=1' title='Ban IP'>B</a>] ";
+                                    echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&del_post=1&ban=1' title='Delete and Ban'>D&B</a>] ";
+                                    echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&del_img=1' title='Delete picture'>DI</a>] ";
+                                    echo "<span class='sticky'>[ <a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&sticky=1' title='Make Sticky'> S </a><span class='stickyshow'> Stiky Level: <a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&sticky=1&sticky_level=1' title='Level 1'>1</a> <a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&sticky=1&sticky_level=2' title='Level 2'>2</a> <a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&sticky=1&sticky_level=3' title='Level 3'>3</a> <a href='". BASE_PATH . "del.php?post_ID=" . $posts_row['post_ID'] ."&sticky=1&sticky_level=0' title='Level 0'>0</a> </span>]</span>";
+                                }
+                                echo "</div>";
+                            }
+                            ?>
                         </header>
                         <div class="post-content">
 
@@ -209,8 +254,7 @@ if ($boards['board_url'] != $board_url) {
                     */
                    
                     try {
-                        
-                        $stmt = $conn->prepare('SELECT p.post_ID, users.user_name, p.poster_ip, p.post_date, p.post_content, p.pic_ID
+                        $stmt = $conn->prepare('SELECT p.post_ID, users.user_name, p.poster_ip, p.post_date, p.post_name, p.post_subject, p.post_email, p.post_content, p.pic_ID
                         FROM posts p
                         LEFT JOIN users ON p.user_ID=users.user_ID
                         WHERE p.parent_ID = :parent_ID
@@ -247,19 +291,63 @@ if ($boards['board_url'] != $board_url) {
                     ?>
 
 
-                                        <div class="reply-container">
+                                        <div class="reply-container" id="<?php echo $reply_row['post_ID']; ?>">
                                             <div class="reply-arrows">>></div>
                                             <div class="post-reply">
                                                 <header class="post-meta">
-                                                    <span class="username"><?php if ($reply_row['user_name'] ) {  echo $reply_row['user_name']; } else { echo "Anonymous"; }?></span> <span class="post-date"><?php echo date('Y/m/d H:i:s', $reply_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $reply_row['post_ID']; ?></a>
+                                                    <?php
+                                                        if ($reply_row['post_subject']) {
+                                                            echo "<span class='subject'>";
+                                                            echo $reply_row['post_subject'];
+                                                            echo "</span>";
+                                                        }
+                                                    ?>
+                                                    <?php
+                                                        if ($reply_row['post_email'] ) {
+                                                            echo "<a href='mailto:".$reply_row['post_email']."'>";
+                                                        }
+                                                    ?>
+                                                    <span class="username">
+                                                    <?php
+                                                        if ($reply_row['post_name']) {
+                                                            echo $reply_row['post_name'];
+                                                        } else {
+                                                            if ($reply_row['user_name'] ) {
+                                                                echo $reply_row['user_name'];
+                                                            } else {
+                                                                echo "Anonymous";
+                                                            }
+                                                        }
+                                                    ?> 
+                                                    <?php
+                                                        if ($reply_row['post_email'] ) {
+                                                            echo "</a>";
+                                                        }
+                                                    ?>
+
+                                                    </span>
+                                                    <span class="post-date"><?php echo date('Y/m/d H:i:s', $reply_row['post_date']); ?></span> <a href="#" class="post-no">No. <?php echo $reply_row['post_ID']; ?></a>
                                                     <?php if ($reply_pic_info==True) { ?>
-                                                    <div class="file-info">File: <a href="#"><?php echo $reply_pic_info['pic_newname']; ?>.jpg</a>-(<?php echo $reply_pic_info['pic_size']; ?> KB, <?php echo $reply_pic_info['file_x']; ?>x<?php echo $reply_pic_info['file_y']; ?>, <?php echo $reply_pic_info['pic_name']; ?>)</div>
+                                                    <div class="file-info">File: <a href="<?php echo BASE_PATH."upload/" . $reply_pic_info['pic_newname']; ?>"><?php echo $reply_pic_info['pic_newname']; ?></a>-(<?php echo $reply_pic_info['pic_size']; ?> KB, <?php echo $reply_pic_info['file_x']; ?>x<?php echo $reply_pic_info['file_y']; ?>, <?php echo $reply_pic_info['pic_name']; ?>)</div>
                                                     <a class="post-image" href="<?php echo BASE_PATH."upload/" . $reply_pic_info['pic_newname']; ?>"><img src="<?php echo BASE_PATH."upload/" . $reply_pic_info['pic_thumbname']; ?>"></a>
                                                     <?php } ?>
+                                                    <?php if(isset($_SESSION['user_ID'])) {
+                                                        echo "<div class='admin'>";
+                                                        if ($_SESSION['admin_level'] >= DEL_LEVEL) {
+                                                            echo "IP: ". $posts_row['poster_ip']." - ";
+                                                            echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $reply_row['post_ID'] ."&del_post=1' title='Delete post'>D</a>] ";
+                                                            echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $reply_row['post_ID'] ."&ban=1' title='Ban IP'>B</a>] ";
+                                                            echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $reply_row['post_ID'] ."&del_post=1&ban=1' title='Delete and Ban'>D&B</a>] ";
+                                                            echo "[<a href='". BASE_PATH . "del.php?post_ID=" . $reply_row['post_ID'] ."&del_img=1' title='Delete picture'>DI</a>] ";
+                                                            echo "<span class='sticky'>[ <a href='". BASE_PATH . "del.php?post_ID=" . $reply_row['post_ID'] ."&sticky=1' title='Make Sticky'> S </a><span class='stickyshow'> Stiky Level: <a href='". BASE_PATH . "del.php?post_ID=" . $reply_row['post_ID'] ."&sticky=1&sticky_level=1' title='Level 1'>1</a> <a href='". BASE_PATH . "del.php?post_ID=" . $reply_row['post_ID'] ."&sticky=1&sticky_level=2' title='Level 2'>2</a> <a href='". BASE_PATH . "del.php?post_ID=" . $reply_row['post_ID'] ."&sticky=1&sticky_level=3' title='Level 3'>3</a> <a href='". BASE_PATH . "del.php?post_ID=" . $reply_row['post_ID'] ."&sticky=1&sticky_level=0' title='Level 0'>0</a> </span>]</span>";
+                                                        }
+                                                        echo "</div>";
+                                                    }
+                                                    ?>
                                                 </header>
                                                    <div class="post-content">
-                                                    <?php echo $reply_row['post_content']; ?>
-                                                </div>
+                                                        <?php echo $reply_row['post_content']; ?>
+                                                    </div>
                                                </div>
                                                
                                         </div>
