@@ -26,17 +26,22 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
     } catch(PDOException $e) {
             echo 'ERROR: ' . $e->getMessage();
     }
-    if ($user_data['user_ID'] == True) {
-    	$_SESSION['user_ID'] = $user_data['user_ID'];
-    	$_SESSION['user_name'] = $user_data['user_name'];
-    	/*$_SESSION['user_pass'] = $user_data['user_pass'];*/
-    	$_SESSION['admin_level'] = $user_data['admin_level'];
-    	$_SESSION['banned'] = $user_data['banned'];
 
-    	header("Location: admin.php");
-    	exit();
+    if ($user_data['banned'] != 0) {
+        $_SESSION['banned'] = $user_data['banned'];
     } else {
-    	$login_error = 1;
+        if ($user_data['user_ID']) {
+        	$_SESSION['user_ID'] = $user_data['user_ID'];
+        	$_SESSION['user_name'] = $user_data['user_name'];
+        	/*$_SESSION['user_pass'] = $user_data['user_pass'];*/
+        	$_SESSION['admin_level'] = $user_data['admin_level'];
+        	$_SESSION['banned'] = $user_data['banned'];
+
+        	header("Location: admin.php");
+        	exit();
+        } else {
+        	$login_error = 1;
+        }
     }
 }
 
@@ -57,7 +62,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
     <body>
         <div id="page-container">
         <?php
-		if(!isset($_SESSION['user_ID'])) {
+		if(!isset($_SESSION['user_ID']) && !isset($_SESSION['banned'])) {
 		?>
         <header id="page-header">
         <h1>Login</h1>
@@ -84,27 +89,13 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 
 		<?php
 		} else {
-		?>
-			<p>Welcome <?php echo $_SESSION['user_name']; ?>. <a href="?logout=1">Logout?</a></p>
-		<?php
-		echo "<pre>";
-		echo var_dump($_SESSION);
-		echo "</pre>";
 			if ($_SESSION['banned'] > 0) {
 				echo "<big style='color:red'>Seems like you are banned!</big>";
-				echo "<br>Reason:";
-				    try {
-				        $stmt = $conn->prepare('SELECT ban_reason
-				        FROM users
-				        WHERE user_ID = :user_ID');
-
-				        $stmt->execute(array('user_ID' => $_SESSION['user_ID'] ));
-				        $ban_reason = $stmt -> fetch();
-				    } catch(PDOException $e) {
-				            echo 'ERROR: ' . $e->getMessage();
-				    }
-				echo "<blockquote>". $ban_reason['ban_reason'] ."</blockquote>";
-			}
+			} else {
+                ?>
+                <p>Welcome <?php echo $_SESSION['user_name']; ?>. <a href="?logout=1">Logout?</a></p> 
+                <?php
+            }
 		}
 
 

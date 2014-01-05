@@ -97,7 +97,7 @@ if ($boards['board_ID'] != True) {
             <?php
             if(isset($_SESSION['user_ID'])) {
                 echo "<span id='user-meta'>";
-                echo "Sup ".$_SESSION['user_name'];
+                echo $_SESSION['user_name'];
                 if ($_SESSION['admin_level'] > 0) {
                     echo " - <a href='". BASE_PATH ."admin.php'>Admin</a>";
                 }

@@ -89,7 +89,7 @@ if ($boards['board_url'] != $board_url) {
             <?php
             if(isset($_SESSION['user_ID'])) {
                 echo "<span id='user-meta'>";
-                echo "Sup ".$_SESSION['user_name'];
+                echo $_SESSION['user_name'];
                 if ($_SESSION['admin_level'] > 0) {
                     echo " - <a href='". BASE_PATH ."admin.php'>Admin</a>";
                 }
@@ -115,6 +115,9 @@ if ($boards['board_url'] != $board_url) {
                 <h1>/<?php  echo $boards['board_url']; ?>/ - <?php  echo $boards['board_name']; ?></h1>
                 <span><?php  echo $boards['board_meta']; ?></span>
             </div>
+
+            <h3 style="background:rgba(14, 96, 133, 0.2);text-align: center;">Posting mode: Reply</h3>
+
             <div id="new-thread">
                 <form action="<?php echo BASE_PATH; ?>upload.php" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="parent_ID" value="<?php echo $post_ID; ?>">

@@ -32,6 +32,19 @@ try {
     </head>
     <body>
         <div id="page-container">
+        <?php
+            if(isset($_SESSION['user_ID'])) {
+                echo "<span id='user-meta'>";
+                echo $_SESSION['user_name'];
+                if ($_SESSION['admin_level'] > 0) {
+                    echo " - <a href='". BASE_PATH ."admin.php'>Admin</a>";
+                }
+                echo " - <a href='". BASE_PATH ."login.php?logout=1'>Logout</a>";
+                echo "</span>";
+            } else {
+                echo " <a href='". BASE_PATH ."login.php'>Login</a>";
+            }
+        ?>
         <header id="page-header">
             <h1><?php echo $site_settings['site_name']; ?></h1>
         </header>
@@ -120,7 +133,7 @@ try {
         foreach($recent_images as $recent_images_row) {
             echo "<li>";
             if ($recent_images_row['parent_ID']) {
-                echo "<a href='".  BASE_PATH . $recent_images_row['board_url'] ."/res/" .$recent_images_row['parent_ID'] . "'>";
+                echo "<a href='".  BASE_PATH . $recent_images_row['board_url'] ."/res/" .$recent_images_row['parent_ID'] ."/#". $recent_images_row['post_ID'] ."'>";
             } else {
                 echo "<a href='".  BASE_PATH . $recent_images_row['board_url'] ."/res/" .$recent_images_row['post_ID'] . "'>";
             }
@@ -145,7 +158,7 @@ try {
                 <ul>
 <?php
 try {
-    $stmt = $conn->prepare('SELECT p.post_ID ,boards.board_url, boards.board_name , SUBSTRING(p.post_content, 1, 100)
+    $stmt = $conn->prepare('SELECT p.post_ID , p.parent_ID,boards.board_url, boards.board_name , SUBSTRING(p.post_content, 1, 100)
     FROM posts p
     LEFT JOIN boards ON p.board_ID=boards.board_ID
     WHERE post_content != ""
@@ -156,7 +169,13 @@ try {
     if ( count($recent_posts) ) {
         foreach($recent_posts as $recent_posts_row) {
             echo "<li>";
-            echo $recent_posts_row['board_name'] .": <a href='". $recent_posts_row['board_url'] . "/res/" . $recent_posts_row['post_ID'] ."'>". $recent_posts_row['SUBSTRING(p.post_content, 1, 100)'] . "</a>";
+            if ($recent_posts_row['parent_ID']) {
+                echo $recent_posts_row['board_name'] .": <a href='". $recent_posts_row['board_url'] . "/res/" . $recent_posts_row['parent_ID'] ."/#". $recent_posts_row['post_ID'] ."'>". $recent_posts_row['SUBSTRING(p.post_content, 1, 100)'] . "</a>";
+                
+            } else {
+                echo $recent_posts_row['board_name'] .": <a href='". $recent_posts_row['board_url'] . "/res/" . $recent_posts_row['post_ID'] ."'>". $recent_posts_row['SUBSTRING(p.post_content, 1, 100)'] . "</a>";
+            }
+            
             echo "</li>";
         }
     } else {

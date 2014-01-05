@@ -25,7 +25,7 @@ if(!isset($_SESSION['user_ID'])) {
         <div id="page-container">
             <nav id="nav">
                 <ul>
-                    <li><a href="<?php echo BASE_PATH; ?>">Home</a></li><li><a href="?page=new_article">New Article</a></li><li><a href="?page=boards">Boards</a></li><li><a href="?page=bans">List of Bans</a></li><li><a href="?page=users">Manage Users</a></li><li><a href="?page=site_settings">Site settings</a></li>
+                    <li><a href="<?php echo BASE_PATH; ?>">Home</a></li><li><a href="?page=new_article">New Article</a></li><li><a href="?page=boards">Boards</a></li><li><a href="?page=bans">List of Bans</a></li><li><a href="?page=users">Manage Users</a></li><li><a href="?page=site_settings">Site settings</a></li><li><a href="admin.php">Recent Posts</a></li>
                 </ul>
             </nav>
 
@@ -338,6 +338,7 @@ if(!isset($_SESSION['user_ID'])) {
                                             <input type="submit" value="Update">
                                         </form>
 
+                                        <hr class="style-two">
 
                                         <form action="admin_post.php" method="post">
                                             <input type="hidden" name="data" value="add_warning" />
@@ -446,9 +447,95 @@ if(!isset($_SESSION['user_ID'])) {
                         </fieldset>
                         <input type="submit" value="Update">
                     </form>
+
+                    <hr class="style-two">
+                    <?php
+                    try {
+                        $stmt = $conn->prepare('SELECT message
+                        FROM global_message
+                        ORDER BY message_ID DESC');
+
+                        $stmt->execute();
+                        $glob_msg = $stmt -> fetch(PDO::FETCH_ASSOC);
+                    } catch(PDOException $e) {
+                        echo 'ERROR: ' . $e->getMessage();
+                    }
+                    ?>
+                    <form action="admin_post.php" method="post">
+                        <input type="hidden" name="data" value="global_message" />
+                        <fieldset>
+                        <legend> Global Message </legend>
+                            <dl>
+                                <dt><label for="message">Enter a message that is shown on all boards:</label></dt>
+                                <dd><textarea class="input-text" rows="4" cols="50" name="message"><?php if ($glob_msg) { echo $glob_msg['message']; }?></textarea></dd>
+                            </dl>
+                            <input type="submit" value="Post">
+                        </fieldset>
+                    </form>
                     <?php
                 }
-                /////////////////////////////////////////
+            } else {
+                //////////////////////////////////////////////////////////////////////////////////////
+                ///////////////////////////      ADMIN MAIN PAGE        //////////////////////////////
+                //////////////////////////////////////////////////////////////////////////////////////
+                ?>
+                <h2>Recent posts</h2>
+                <?php
+                try {
+                    $stmt = $conn->prepare('SELECT p.post_ID, p.post_name, users.user_name, p.post_date, p.post_content, pictures.pic_thumbname, p.parent_ID, boards.board_url
+                    FROM posts p
+                    LEFT JOIN pictures ON p.pic_ID=pictures.pic_ID
+                    LEFT JOIN boards ON p.board_ID=boards.board_ID
+                    LEFT JOIN users ON p.user_ID = users.user_ID
+                    ORDER BY p.post_ID DESC
+                    LIMIT 0,3');
+                    $stmt->execute();
+                    $recent_posts = $stmt->fetchAll();
+                    if ( count($recent_posts) ) {
+                        foreach($recent_posts as $recent_posts_row) {
+                            if ($recent_posts_row['parent_ID']) {
+                                echo "<a href='".  BASE_PATH . $recent_posts_row['board_url'] ."/res/" .$recent_posts_row['parent_ID'] ."/#". $recent_posts_row['post_ID'] ."'>";
+                            } else {
+                                echo "<a href='".  BASE_PATH . $recent_posts_row['board_url'] ."/res/" .$recent_posts_row['post_ID'] . "'>";
+                            }
+
+                            echo "<div class='post-box'>";
+                            
+                            if ($recent_posts_row['pic_thumbname']) {
+                                echo "<img style='margin-right: 0.3em;' width='125' src='" . BASE_PATH . "upload/" . $recent_posts_row['pic_thumbname'] . "'>";
+                            }
+
+                            ?>
+                            <span class="username">
+                            <?php
+                                if ($recent_posts_row['post_name']) {
+                                    echo $recent_posts_row['post_name'];
+                                } else {
+                                    if ($recent_posts_row['user_name'] ) {
+                                        echo $recent_posts_row['user_name'];
+                                    } else {
+                                        echo "Anonymous";
+                                    }
+                                }
+                            ?>
+                            </span>
+
+                            <span class="post-date"><?php echo date('Y/m/d H:i:s', $recent_posts_row['post_date']); ?></span> No. <?php echo $recent_posts_row['post_ID']; ?>
+                            <hr class="style-two" style="margin: 0.1em 0";>
+                            <?php
+
+                            echo $recent_posts_row['post_content'];
+                           
+                            
+                            echo "</div>";
+                            echo "</a>";
+                        }
+                    } else {
+                        echo "There are no posts.";
+                    }
+                } catch(PDOException $e) {
+                    echo 'ERROR: ' . $e->getMessage();
+                } 
             }
             ?>
         </div>
